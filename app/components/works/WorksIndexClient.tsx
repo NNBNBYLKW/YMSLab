@@ -53,17 +53,21 @@ export function WorksIndexClient({ works, tags }: WorksIndexClientProps) {
               <Link
                 href={`/works/${work.slug}`}
                 className={`worksListCard worksListCard-${work.theme.effect}`}
-                style={{
-                  ["--accent" as string]: work.theme.accent,
-                  ["--tilt" as string]: reduceMotion ? "0deg" : "0.6deg",
-                }}
+                style={{ ["--accent" as string]: work.theme.accent }}
               >
+                <div className="worksListCover" aria-hidden>
+                  <span>{work.cover.kicker}</span>
+                  <p>{work.cover.oneLiner}</p>
+                </div>
+
                 <div className="worksListMeta">
                   <span>{work.theme.mood}</span>
                   <span>{work.year}</span>
                 </div>
+
                 <h3>{work.title}</h3>
                 <p>{work.excerpt}</p>
+
                 <div className="worksCardTags">
                   {work.tags.map((tag) => (
                     <span key={`${work.slug}-${tag}`}>{tag}</span>

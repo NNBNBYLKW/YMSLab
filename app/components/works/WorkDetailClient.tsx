@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { Reveal } from "@/components/motion/Reveal";
-import { Parallax } from "@/components/motion/Parallax";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { getMotionConfig } from "@/lib/motion";
 import type { Work } from "@/data/works";
@@ -19,6 +18,7 @@ const effectCopy: Record<Work["theme"]["effect"], string> = {
   scanline: "扫描线层",
   glitch: "轻故障",
   lightleak: "光泄漏",
+  "parallax-lines": "视差线层",
   none: "无额外特效",
 };
 
@@ -36,16 +36,16 @@ export function WorkDetailClient({ work, prev, next }: WorkDetailClientProps) {
         <Reveal>
           <p className="workDetailEyebrow">{work.theme.mood} / {work.year}</p>
         </Reveal>
-        <Reveal delay={0.08}>
+        <Reveal delay={0.06}>
           <h1>{work.title}</h1>
         </Reveal>
-        <Reveal delay={0.16}>
-          <p className="workIntro">{work.excerpt}</p>
+        <Reveal delay={0.12}>
+          <p className="workIntro">{work.summary}</p>
         </Reveal>
 
-        <Reveal delay={0.24}>
+        <Reveal delay={0.18}>
           <div className="workHeroMeta">
-            <span>特效：{effectCopy[work.theme.effect]}</span>
+            <span>Theme effect：{effectCopy[work.theme.effect]}</span>
             <div className="worksCardTags">
               {work.tags.map((tag) => (
                 <span key={tag}>{tag}</span>
@@ -55,13 +55,71 @@ export function WorkDetailClient({ work, prev, next }: WorkDetailClientProps) {
         </Reveal>
       </header>
 
+      <div className="workStructuredGrid">
+        <Reveal>
+          <section className="workInfoCard">
+            <h2>简介</h2>
+            <p>{work.excerpt}</p>
+          </section>
+        </Reveal>
+
+        <Reveal delay={motion.staggerDelay}>
+          <section className="workInfoCard">
+            <h2>职责</h2>
+            <ul>
+              {work.responsibilities.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </section>
+        </Reveal>
+
+        <Reveal delay={motion.staggerDelay * 2}>
+          <section className="workInfoCard">
+            <h2>技术栈</h2>
+            <div className="worksCardTags">
+              {work.stack.map((item) => (
+                <span key={item}>{item}</span>
+              ))}
+            </div>
+          </section>
+        </Reveal>
+
+        <Reveal delay={motion.staggerDelay * 3}>
+          <section className="workInfoCard">
+            <h2>媒体</h2>
+            <ul>
+              {work.media.map((item) => (
+                <li key={`${item.type}-${item.title}`}>
+                  <strong>{item.type.toUpperCase()} · {item.title}</strong>
+                  <p>{item.description}</p>
+                </li>
+              ))}
+            </ul>
+          </section>
+        </Reveal>
+
+        <Reveal delay={motion.staggerDelay * 4}>
+          <section className="workInfoCard">
+            <h2>链接</h2>
+            <ul className="workLinks">
+              {work.links.map((item) => (
+                <li key={item.label}>
+                  <a href={item.href} target="_blank" rel="noreferrer">
+                    {item.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        </Reveal>
+      </div>
+
       <div className="workContent">
         {work.body.map((paragraph, index) => (
           <Reveal key={`${work.slug}-${index}`} delay={index * 0.06}>
             <section className="workSection">
-              <Parallax level="medium" offset={motion.parallaxOffset}>
-                <h2 className={work.theme.effect === "glitch" && motion.allowGlitch ? "glitchHeading" : ""}>章节 {String(index + 1).padStart(2, "0")}</h2>
-              </Parallax>
+              <h2 className={work.theme.effect === "glitch" && motion.allowGlitch ? "glitchHeading" : ""}>章节 {String(index + 1).padStart(2, "0")}</h2>
               <p>{paragraph}</p>
             </section>
           </Reveal>
