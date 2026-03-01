@@ -24,7 +24,7 @@ export default async function BlogPostPage({
       <main>
         <Section>
           <Container>
-            <Reveal>
+            <Reveal level="low">
               <Tag>Blog Post</Tag>
               <h1 className="hero-title blogTitle">{meta.title}</h1>
               <div className="blogPostMeta">

@@ -3,7 +3,9 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { works } from "../data/works";
-import { Reveal } from "./components/reveal";
+import { Reveal } from "@/components/motion/Reveal";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { getMotionConfig } from "@/lib/motion";
 
 const services = ["品牌叙事短片", "发布会视觉包装", "社媒动效内容", "后期剪辑与调色", "声音设计", "内容策略协作"];
 const steps = [
@@ -48,41 +50,39 @@ function WorkCard({ work, reduceMotion }: { work: (typeof works)[number]; reduce
 export default function Home() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [pointer, setPointer] = useState({ x: 0, y: 0 });
-  const [reduceMotion, setReduceMotion] = useState(false);
+  const reduceMotion = useReducedMotion();
   const heroWords = useMemo(() => ["YMS", "Lab", "Motion"], []);
+  const motion = getMotionConfig("high", reduceMotion);
 
   useEffect(() => {
-    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const update = () => setReduceMotion(media.matches);
-    update();
-    media.addEventListener("change", update);
-    return () => media.removeEventListener("change", update);
-  }, []);
+    if (!motion.allowScrollLinked) {
+      setScrollProgress(0);
+      return;
+    }
 
-  useEffect(() => {
-    if (reduceMotion) return;
     const onScroll = () => {
       const h = window.innerHeight || 1;
       setScrollProgress(Math.min(window.scrollY / (h * 0.85), 1));
     };
+
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, [reduceMotion]);
+  }, [motion.allowScrollLinked]);
 
-  const heroScale = reduceMotion ? 1 : 1 - scrollProgress * 0.1;
-  const heroOpacity = reduceMotion ? 1 : 1 - scrollProgress * 0.85;
-  const nextOpacity = reduceMotion ? 1 : Math.max(0, Math.min((scrollProgress - 0.16) / 0.45, 1));
+  const heroScale = motion.allowScrollLinked ? 1 - scrollProgress * 0.1 : 1;
+  const heroOpacity = motion.allowScrollLinked ? 1 - scrollProgress * 0.85 : 1;
+  const nextOpacity = motion.allowScrollLinked ? Math.max(0, Math.min((scrollProgress - 0.16) / 0.45, 1)) : 1;
 
   return (
     <main
       className="homeRoot"
       onMouseMove={(e) => {
-        if (reduceMotion || window.matchMedia("(pointer: coarse)").matches) return;
+        if (!motion.allowMouseFollow || window.matchMedia("(pointer: coarse)").matches) return;
         setPointer({ x: e.clientX, y: e.clientY });
       }}
     >
-      {!reduceMotion && <div className="cursorGlow" style={{ transform: `translate(${pointer.x}px, ${pointer.y}px)` }} />}
+      {motion.allowMouseFollow && <div className="cursorGlow" style={{ transform: `translate(${pointer.x}px, ${pointer.y}px)` }} />}
 
       <section className="hero" style={{ transform: `scale(${heroScale})`, opacity: heroOpacity }}>
         <p className="eyebrow">Independent Visual Studio</p>
@@ -101,7 +101,7 @@ export default function Home() {
       </section>
 
       <div style={{ opacity: nextOpacity }}>
-        <Reveal>
+        <Reveal level="high">
           <section id="works" className="section">
             <h2>精选作品预览</h2>
             <div className="worksGrid">
@@ -112,7 +112,7 @@ export default function Home() {
           </section>
         </Reveal>
 
-        <Reveal>
+        <Reveal level="high">
           <section className="section">
             <h2>服务能力</h2>
             <div className="pillGrid">
@@ -123,7 +123,7 @@ export default function Home() {
           </section>
         </Reveal>
 
-        <Reveal>
+        <Reveal level="high">
           <section className="section">
             <h2>关于 / 流程</h2>
             <div className="stepGrid">
@@ -137,7 +137,7 @@ export default function Home() {
           </section>
         </Reveal>
 
-        <Reveal>
+        <Reveal level="high">
           <section className="section">
             <h2>联系</h2>
             <form className="contactForm">

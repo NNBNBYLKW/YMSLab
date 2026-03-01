@@ -21,7 +21,7 @@ export default async function BlogPage({
     <main>
       <Section>
         <Container>
-          <Reveal>
+          <Reveal level="low">
             <Tag>Blog</Tag>
             <h1 className="hero-title" style={{ marginTop: "0.75rem" }}>
               文章与笔记
@@ -44,24 +44,30 @@ export default async function BlogPage({
             ))}
           </div>
 
-          <div className="blogList">
-            {filteredPosts.map((post, index) => (
-              <Reveal key={post.slug} delay={index * 0.04} distance={20}>
-                <article className="blogCard">
-                  <h2>
-                    <Link href={`/blog/${post.slug}`}>{post.title}</Link>
-                  </h2>
-                  <div className="blogCardDate">{post.date}</div>
-                  <p>{post.summary}</p>
-                  <div className="blogCardTags">
-                    {post.tags.map((item) => (
-                      <span key={item}>#{item}</span>
-                    ))}
-                  </div>
-                </article>
-              </Reveal>
-            ))}
-          </div>
+          {posts.length === 0 ? (
+            <div className="emptyState emptyState-minimal">还没有博客内容，稍后会发布新的文章。</div>
+          ) : filteredPosts.length === 0 ? (
+            <div className="emptyState emptyState-minimal">当前标签下没有文章，换个标签看看。</div>
+          ) : (
+            <div className="blogList">
+              {filteredPosts.map((post, index) => (
+                <Reveal key={post.slug} delay={index * 0.03} distance={12} level="low">
+                  <article className="blogCard">
+                    <h2>
+                      <Link href={`/blog/${post.slug}`}>{post.title}</Link>
+                    </h2>
+                    <div className="blogCardDate">{post.date}</div>
+                    <p>{post.summary}</p>
+                    <div className="blogCardTags">
+                      {post.tags.map((item) => (
+                        <span key={item}>#{item}</span>
+                      ))}
+                    </div>
+                  </article>
+                </Reveal>
+              ))}
+            </div>
+          )}
         </Container>
       </Section>
     </main>

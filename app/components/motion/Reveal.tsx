@@ -2,6 +2,7 @@
 
 import { ReactNode, useEffect, useRef, useState } from "react";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { MotionLevel, getMotionConfig } from "@/lib/motion";
 
 type Direction = "up" | "down" | "left" | "right";
 
@@ -11,6 +12,8 @@ type RevealProps = {
   direction?: Direction;
   delay?: number;
   distance?: number;
+  level?: MotionLevel;
+  durationMs?: number;
   once?: boolean;
 };
 
@@ -28,10 +31,22 @@ const axisOffset = (direction: Direction, distance: number) => {
   }
 };
 
-export function Reveal({ children, className, direction = "up", delay = 0, distance = 28, once = true }: RevealProps) {
+export function Reveal({
+  children,
+  className,
+  direction = "up",
+  delay = 0,
+  distance,
+  level = "medium",
+  durationMs,
+  once = true,
+}: RevealProps) {
   const ref = useRef<HTMLDivElement | null>(null);
   const reduce = useReducedMotion();
-  const [shown, setShown] = useState(reduce);
+  const motion = getMotionConfig(level, reduce);
+  const [shown, setShown] = useState(false);
+  const resolvedDistance = distance ?? motion.revealDistance;
+  const resolvedDurationMs = durationMs ?? motion.revealDurationMs;
 
   useEffect(() => {
     if (reduce || !ref.current) {
@@ -63,9 +78,11 @@ export function Reveal({ children, className, direction = "up", delay = 0, dista
       className={className}
       style={{
         opacity: shown ? 1 : 0,
-        transform: shown ? "translate3d(0,0,0)" : axisOffset(direction, distance),
-        transition: `opacity 560ms ease ${delay}s, transform 560ms ease ${delay}s`,
-        willChange: "transform, opacity",
+        transform: shown || reduce ? "translate3d(0,0,0)" : axisOffset(direction, resolvedDistance),
+        transition: reduce
+          ? `opacity ${resolvedDurationMs}ms ease ${delay}s`
+          : `opacity ${resolvedDurationMs}ms ease ${delay}s, transform ${resolvedDurationMs}ms ease ${delay}s`,
+        willChange: reduce ? "opacity" : "transform, opacity",
       }}
     >
       {children}
