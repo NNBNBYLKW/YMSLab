@@ -1,28 +1,65 @@
 import Link from "next/link";
-import { Card } from "@/components/ui/Card";
 import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 import { Tag } from "@/components/ui/Tag";
-import { getAllDocs } from "@/lib/docs";
+import { Reveal } from "@/components/motion/Reveal";
+import { getAllPosts } from "@/lib/blog";
 
-export default async function BlogPage() {
-  const docs = await getAllDocs();
+export default async function BlogPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ tag?: string }>;
+}) {
+  const posts = await getAllPosts();
+  const { tag } = await searchParams;
+
+  const allTags = [...new Set(posts.flatMap((post) => post.tags))].sort((a, b) => a.localeCompare(b));
+  const activeTag = tag?.trim();
+  const filteredPosts = activeTag ? posts.filter((post) => post.tags.includes(activeTag)) : posts;
 
   return (
     <main>
       <Section>
         <Container>
-          <Tag>Blog</Tag>
-          <h1 className="hero-title" style={{ marginTop: "0.75rem" }}>文章与笔记</h1>
-          <p className="hero-subtitle">博客页当前保持简洁排版，优先内容可读性，不引入复杂动画。</p>
+          <Reveal>
+            <Tag>Blog</Tag>
+            <h1 className="hero-title" style={{ marginTop: "0.75rem" }}>
+              文章与笔记
+            </h1>
+            <p className="hero-subtitle">内容驱动，轻动效，优先阅读体验。</p>
+          </Reveal>
 
-          <div style={{ display: "grid", gap: "0.75rem", marginTop: "1.5rem" }}>
-            {docs.map((doc) => (
-              <Card key={doc.slug}>
-                <Link href={`/docs/${doc.slug}`} style={{ fontWeight: 650 }}>{doc.title}</Link>
-                {doc.date ? <div style={{ color: "var(--text-muted)", fontSize: "0.85rem" }}>{doc.date}</div> : null}
-                {doc.summary ? <p style={{ marginBottom: 0, color: "var(--text-muted)" }}>{doc.summary}</p> : null}
-              </Card>
+          <div className="blogFilterRow">
+            <Link href="/blog" className={`blogFilterPill ${!activeTag ? "is-active" : ""}`}>
+              全部
+            </Link>
+            {allTags.map((item) => (
+              <Link
+                key={item}
+                href={`/blog?tag=${encodeURIComponent(item)}`}
+                className={`blogFilterPill ${activeTag === item ? "is-active" : ""}`}
+              >
+                #{item}
+              </Link>
+            ))}
+          </div>
+
+          <div className="blogList">
+            {filteredPosts.map((post, index) => (
+              <Reveal key={post.slug} delay={index * 0.04} distance={20}>
+                <article className="blogCard">
+                  <h2>
+                    <Link href={`/blog/${post.slug}`}>{post.title}</Link>
+                  </h2>
+                  <div className="blogCardDate">{post.date}</div>
+                  <p>{post.summary}</p>
+                  <div className="blogCardTags">
+                    {post.tags.map((item) => (
+                      <span key={item}>#{item}</span>
+                    ))}
+                  </div>
+                </article>
+              </Reveal>
             ))}
           </div>
         </Container>
