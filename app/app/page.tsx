@@ -27,15 +27,15 @@ function WorkCard({ work, reduceMotion }: { work: (typeof works)[number]; reduce
 
   return (
     <a
-      href={work.href}
+      href={`/works/${work.slug}`}
       className="workCard"
       style={{ transform: transformStyle }}
       onMouseMove={onMove}
       onMouseLeave={() => setTransformStyle("perspective(1000px) rotateX(0deg) rotateY(0deg)")}
     >
-      <p className="workCategory">{work.category}</p>
+      <p className="workCategory">{work.theme.mood} / {work.year}</p>
       <h3>{work.title}</h3>
-      <p>{work.description}</p>
+      <p>{work.excerpt}</p>
       <div className="tags">
         {work.tags.map((tag) => (
           <span key={tag}>{tag}</span>

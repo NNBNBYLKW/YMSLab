@@ -7,7 +7,6 @@ export const metadata: Metadata = {
   description: "Personal dev notes, docs and motion studies",
 };
 
-const noiseEnabled = theme.noise.enabledByDefault;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -18,7 +17,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Link href="/" className="logo">YMS Lab</Link>
             <nav className="siteNav">
               <Link href="/" className="navLink">Home</Link>
-              <Link href="/docs" className="navLink">Docs</Link>
+              <Link href="/works" className="navLink">Works</Link>
+              <Link href="/docs" className="navLink">Blog</Link>
             </nav>
           </header>
 
