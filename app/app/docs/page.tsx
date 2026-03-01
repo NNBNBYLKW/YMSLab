@@ -1,3 +1,7 @@
+import Link from "next/link";
+import { Card } from "@/components/ui/Card";
+import { Container } from "@/components/ui/Container";
+import { Section } from "@/components/ui/Section";
 import { getAllDocs } from "@/lib/docs";
 
 export default async function DocsIndex() {
@@ -5,18 +9,20 @@ export default async function DocsIndex() {
 
   return (
     <main>
-      <h1>Docs</h1>
-      <p>这里是我的博客/文档列表。</p>
-
-      <ul style={{ paddingLeft: 18 }}>
-        {docs.map((d) => (
-          <li key={d.slug} style={{ marginBottom: 10 }}>
-            <a href={`/docs/${d.slug}`} style={{ fontWeight: 600 }}>{d.title}</a>
-            {d.date ? <span style={{ marginLeft: 10, opacity: 0.7 }}>{d.date}</span> : null}
-            {d.summary ? <div style={{ opacity: 0.8 }}>{d.summary}</div> : null}
-          </li>
-        ))}
-      </ul>
+      <Section>
+        <Container>
+          <h1 className="hero-title" style={{ fontSize: "clamp(1.8rem, 3vw, 2.6rem)" }}>Docs</h1>
+          <div style={{ display: "grid", gap: "0.75rem" }}>
+            {docs.map((d) => (
+              <Card key={d.slug}>
+                <Link href={`/docs/${d.slug}`} style={{ fontWeight: 600 }}>{d.title}</Link>
+                {d.date ? <span style={{ marginLeft: 10, color: "var(--text-muted)", fontSize: "0.85rem" }}>{d.date}</span> : null}
+                {d.summary ? <div style={{ color: "var(--text-muted)" }}>{d.summary}</div> : null}
+              </Card>
+            ))}
+          </div>
+        </Container>
+      </Section>
     </main>
   );
 }
