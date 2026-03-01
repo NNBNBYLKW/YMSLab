@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
-import { Footer } from "@/components/ui/Footer";
-import { Header } from "@/components/ui/Header";
-import { theme } from "@/lib/theme";
+import Link from "next/link";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -15,10 +13,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="zh-CN">
       <body>
-        <div className="app-shell" data-noise={noiseEnabled ? "on" : "off"}>
-          <Header />
+        <div className="siteShell">
+          <header className="siteHeader">
+            <Link href="/" className="logo">YMS Lab</Link>
+            <nav className="siteNav">
+              <Link href="/" className="navLink">Home</Link>
+              <Link href="/docs" className="navLink">Docs</Link>
+            </nav>
+          </header>
+
           {children}
-          <Footer />
+
+          <footer className="siteFooter">© {new Date().getFullYear()} YMS Lab</footer>
         </div>
       </body>
     </html>
