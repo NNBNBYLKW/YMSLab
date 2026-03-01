@@ -1,0 +1,25 @@
+@"
+# node / next
+node_modules/
+.next/
+out/
+dist/
+build/
+*.log
+
+# env / secrets
+.env
+.env.*
+*.key
+*.pem
+
+# OS / IDE
+.DS_Store
+.vscode/
+.idea/
+
+# docker volumes / exports
+caddy_data/
+caddy_config/
+site_export/
+"@ | Out-File -Encoding utf8 -NoNewline .gitignore

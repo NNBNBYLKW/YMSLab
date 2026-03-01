@@ -1,0 +1,25 @@
+# www 强制跳转到裸域
+www.ymslab.top {
+  redir https://ymslab.top{uri} permanent
+}
+
+# 主站
+ymslab.top {
+  encode zstd gzip
+
+  log {
+    output stdout
+    format console
+  }
+
+  # 基础安全头（可保留）
+  header {
+    X-Content-Type-Options "nosniff"
+    X-Frame-Options "SAMEORIGIN"
+    Referrer-Policy "strict-origin-when-cross-origin"
+    # 开启 HSTS（首次确认 HTTPS 正常后再保留也行）
+    Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+  }
+
+  reverse_proxy web:3000
+}
