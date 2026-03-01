@@ -52,7 +52,7 @@ export function WorksIndexClient({ works, tags }: WorksIndexClientProps) {
             <StaggerItem key={work.slug}>
               <Link
                 href={`/works/${work.slug}`}
-                className="worksListCard"
+                className={`worksListCard worksListCard-${work.theme.effect}`}
                 style={{
                   ["--accent" as string]: work.theme.accent,
                   ["--tilt" as string]: reduceMotion ? "0deg" : "0.6deg",

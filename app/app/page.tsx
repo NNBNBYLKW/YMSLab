@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { works } from "../data/works";
 import { Reveal } from "@/components/motion/Reveal";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
@@ -31,7 +31,7 @@ function WorkCard({ work, reduceMotion }: { work: (typeof works)[number]; reduce
     <a
       href={`/works/${work.slug}`}
       className="workCard"
-      style={{ transform: transformStyle }}
+      style={{ transform: transformStyle, ["--accent" as string]: work.theme.accent }}
       onMouseMove={onMove}
       onMouseLeave={() => setTransformStyle("perspective(1000px) rotateX(0deg) rotateY(0deg)")}
     >
@@ -53,6 +53,8 @@ export default function Home() {
   const reduceMotion = useReducedMotion();
   const heroWords = useMemo(() => ["YMS", "Lab", "Motion"], []);
   const motion = getMotionConfig("high", reduceMotion);
+  const pointerRaf = useRef<number | null>(null);
+  const latestPointer = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
     if (!motion.allowScrollLinked) {
@@ -60,9 +62,15 @@ export default function Home() {
       return;
     }
 
+    let ticking = false;
     const onScroll = () => {
-      const h = window.innerHeight || 1;
-      setScrollProgress(Math.min(window.scrollY / (h * 0.85), 1));
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(() => {
+        const h = window.innerHeight || 1;
+        setScrollProgress(Math.min(window.scrollY / (h * 0.85), 1));
+        ticking = false;
+      });
     };
 
     onScroll();
@@ -70,22 +78,51 @@ export default function Home() {
     return () => window.removeEventListener("scroll", onScroll);
   }, [motion.allowScrollLinked]);
 
-  const heroScale = motion.allowScrollLinked ? 1 - scrollProgress * 0.1 : 1;
-  const heroOpacity = motion.allowScrollLinked ? 1 - scrollProgress * 0.85 : 1;
-  const nextOpacity = motion.allowScrollLinked ? Math.max(0, Math.min((scrollProgress - 0.16) / 0.45, 1)) : 1;
+  useEffect(() => {
+    return () => {
+      if (pointerRaf.current) {
+        window.cancelAnimationFrame(pointerRaf.current);
+      }
+    };
+  }, []);
+
+  const heroScale = motion.allowScrollLinked ? 1 - scrollProgress * 0.08 : 1;
+  const heroOpacity = motion.allowScrollLinked ? 1 - scrollProgress * 0.78 : 1;
+  const nextOpacity = motion.allowScrollLinked ? Math.max(0, Math.min((scrollProgress - 0.14) / 0.5, 1)) : 1;
+  const parallaxY = motion.allowScrollLinked ? -scrollProgress * 34 : 0;
 
   return (
     <main
       className="homeRoot"
       onMouseMove={(e) => {
         if (!motion.allowMouseFollow || window.matchMedia("(pointer: coarse)").matches) return;
-        setPointer({ x: e.clientX, y: e.clientY });
+        latestPointer.current = { x: e.clientX, y: e.clientY };
+        if (pointerRaf.current) return;
+
+        pointerRaf.current = window.requestAnimationFrame(() => {
+          setPointer(latestPointer.current);
+          pointerRaf.current = null;
+        });
       }}
     >
-      {motion.allowMouseFollow && <div className="cursorGlow" style={{ transform: `translate(${pointer.x}px, ${pointer.y}px)` }} />}
+      {motion.allowMouseFollow && (
+        <>
+          <div className="cursorGlow" style={{ transform: `translate(${pointer.x}px, ${pointer.y}px)` }} />
+          <div
+            className="cursorHalo"
+            style={{ transform: `translate(${pointer.x}px, ${pointer.y}px) translate3d(0, ${parallaxY * -0.35}px, 0)` }}
+          />
+        </>
+      )}
 
-      <section className="hero" style={{ transform: `scale(${heroScale})`, opacity: heroOpacity }}>
-        <p className="eyebrow">Independent Visual Studio</p>
+      <section className="hero" style={{ transform: `scale(${heroScale}) translate3d(0, ${parallaxY}px, 0)`, opacity: heroOpacity }}>
+        <div className="heroMaterial" aria-hidden>
+          <div className="heroBeam heroBeam-primary" />
+          <div className="heroBeam heroBeam-secondary" />
+          <div className="heroNoise" />
+        </div>
+
+        <p className="eyebrow">Independent Visual Studio · Since 2021</p>
         <h1>
           {heroWords.map((word, idx) => (
             <span key={word} style={{ animationDelay: `${idx * 120}ms` }} className="heroWord">
@@ -93,10 +130,18 @@ export default function Home() {
             </span>
           ))}
         </h1>
-        <p className="heroSub">我们用克制却有记忆点的动态语言，帮助品牌在第一秒建立气质。</p>
+        <p className="heroSub">电影化叙事 + 数字质感材质，让品牌画面在第一秒建立气质与节奏。</p>
         <div className="heroCtas">
           <Link href="#works" className="btn primary">查看作品</Link>
-          <Link href="/docs" className="btn ghost">查看博客</Link>
+          <Link href="/blog" className="btn ghost">阅读博客</Link>
+        </div>
+
+        <div className="heroTicker" aria-hidden>
+          <span>Direction</span>
+          <span>Visual Rhythm</span>
+          <span>Color Script</span>
+          <span>Story Arc</span>
+          <span>Sound Driven Cut</span>
         </div>
       </section>
 
