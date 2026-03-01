@@ -1,11 +1,13 @@
 "use client";
 
-import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { works } from "../data/works";
 import { Reveal } from "@/components/motion/Reveal";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { getMotionConfig } from "@/lib/motion";
+import { EffectLayer } from "@/components/motion/EffectLayer";
+import { MagneticButton } from "@/components/motion/MagneticButton";
+import { ParallaxGlow } from "@/components/motion/ParallaxGlow";
 
 const services = ["品牌叙事短片", "发布会视觉包装", "社媒动效内容", "后期剪辑与调色", "声音设计", "内容策略协作"];
 const steps = [
@@ -49,12 +51,9 @@ function WorkCard({ work, reduceMotion }: { work: (typeof works)[number]; reduce
 
 export default function Home() {
   const [scrollProgress, setScrollProgress] = useState(0);
-  const [pointer, setPointer] = useState({ x: 0, y: 0 });
   const reduceMotion = useReducedMotion();
   const heroWords = useMemo(() => ["YMS", "Lab", "Motion"], []);
   const motion = getMotionConfig("high", reduceMotion);
-  const pointerRaf = useRef<number | null>(null);
-  const latestPointer = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
     if (!motion.allowScrollLinked) {
@@ -78,49 +77,17 @@ export default function Home() {
     return () => window.removeEventListener("scroll", onScroll);
   }, [motion.allowScrollLinked]);
 
-  useEffect(() => {
-    return () => {
-      if (pointerRaf.current) {
-        window.cancelAnimationFrame(pointerRaf.current);
-      }
-    };
-  }, []);
-
   const heroScale = motion.allowScrollLinked ? 1 - scrollProgress * 0.08 : 1;
   const heroOpacity = motion.allowScrollLinked ? 1 - scrollProgress * 0.78 : 1;
   const nextOpacity = motion.allowScrollLinked ? Math.max(0, Math.min((scrollProgress - 0.14) / 0.5, 1)) : 1;
   const parallaxY = motion.allowScrollLinked ? -scrollProgress * 34 : 0;
 
   return (
-    <main
-      className="homeRoot"
-      onMouseMove={(e) => {
-        if (!motion.allowMouseFollow || window.matchMedia("(pointer: coarse)").matches) return;
-        latestPointer.current = { x: e.clientX, y: e.clientY };
-        if (pointerRaf.current) return;
-
-        pointerRaf.current = window.requestAnimationFrame(() => {
-          setPointer(latestPointer.current);
-          pointerRaf.current = null;
-        });
-      }}
-    >
-      {motion.allowMouseFollow && (
-        <>
-          <div className="cursorGlow" style={{ transform: `translate(${pointer.x}px, ${pointer.y}px)` }} />
-          <div
-            className="cursorHalo"
-            style={{ transform: `translate(${pointer.x}px, ${pointer.y}px) translate3d(0, ${parallaxY * -0.35}px, 0)` }}
-          />
-        </>
-      )}
+    <main className="homeRoot">
+      <ParallaxGlow enabled={motion.allowMouseFollow} parallaxY={parallaxY} />
 
       <section className="hero" style={{ transform: `scale(${heroScale}) translate3d(0, ${parallaxY}px, 0)`, opacity: heroOpacity }}>
-        <div className="heroMaterial" aria-hidden>
-          <div className="heroBeam heroBeam-primary" />
-          <div className="heroBeam heroBeam-secondary" />
-          <div className="heroNoise" />
-        </div>
+        <EffectLayer />
 
         <p className="eyebrow">Independent Visual Studio · Since 2021</p>
         <h1>
@@ -132,8 +99,8 @@ export default function Home() {
         </h1>
         <p className="heroSub">电影化叙事 + 数字质感材质，让品牌画面在第一秒建立气质与节奏。</p>
         <div className="heroCtas">
-          <Link href="#works" className="btn primary">查看作品</Link>
-          <Link href="/blog" className="btn ghost">阅读博客</Link>
+          <MagneticButton href="#works" variant="primary" enabled={motion.allowMouseFollow}>查看作品</MagneticButton>
+          <MagneticButton href="/blog" variant="ghost" enabled={motion.allowMouseFollow}>阅读博客</MagneticButton>
         </div>
 
         <div className="heroTicker" aria-hidden>

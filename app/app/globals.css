@@ -186,6 +186,9 @@ body::before {
   border: 1px solid var(--line);
   transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease, background-color 220ms ease;
 }
+.magneticButton {
+  will-change: transform;
+}
 .btn.primary { color: #0b0d12; background: #f2f5ff; border-color: #f2f5ff; }
 .btn.ghost { color: var(--text); background: rgba(255,255,255,0.02); }
 .btn:hover, .btn:focus-visible { transform: translateY(-2px); box-shadow: 0 0 0 4px rgba(159,171,255,0.15); border-color: rgba(200,210,255,0.6); }
@@ -264,6 +267,7 @@ body::before {
   .heroWord { opacity: 1; transform: none; animation: none; }
   .heroBeam-primary, .heroBeam-secondary, .effect-scanline::before, .effect-lightleak::before, .glitchHeading { animation: none !important; }
   .reveal, .reveal.is-visible { opacity: 1; transform: none; }
+  .magneticButton { transform: none !important; }
 }
 
 .hero-title { margin: 0; font-size: clamp(2rem, 6vw, 3.4rem); }
