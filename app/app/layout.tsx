@@ -4,8 +4,10 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "YMS Lab",
-  description: "Personal dev notes & docs"
+  description: "Personal dev notes, docs and motion studies",
 };
+
+const noiseEnabled = theme.noise.enabledByDefault;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
