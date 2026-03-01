@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import Link from "next/link";
+import "./globals.css";
 
 export const metadata: Metadata = {
   title: "YMS Lab",
@@ -8,22 +10,19 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="zh-CN">
-      <body style={{ margin: 0, fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, Arial" }}>
-        <div style={{ maxWidth: 960, margin: "0 auto", padding: 24 }}>
-          <header style={{ display: "flex", gap: 16, alignItems: "baseline", marginBottom: 24 }}>
-            <a href="/" style={{ fontWeight: 700, fontSize: 20, textDecoration: "none", color: "inherit" }}>
-              YMS Lab
-            </a>
-            <nav style={{ display: "flex", gap: 12 }}>
-              <a href="/docs">Docs</a>
+      <body>
+        <div className="siteShell">
+          <header className="siteHeader">
+            <Link href="/" className="logo">YMS Lab</Link>
+            <nav className="siteNav">
+              <Link href="/" className="navLink">Home</Link>
+              <Link href="/docs" className="navLink">Docs</Link>
             </nav>
           </header>
 
           {children}
 
-          <footer style={{ marginTop: 48, paddingTop: 16, borderTop: "1px solid #eee", fontSize: 12, opacity: 0.7 }}>
-            © {new Date().getFullYear()} YMS Lab
-          </footer>
+          <footer className="siteFooter">© {new Date().getFullYear()} YMS Lab</footer>
         </div>
       </body>
     </html>
