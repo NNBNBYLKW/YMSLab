@@ -173,3 +173,204 @@ body::before {
   .heroWord { opacity: 1; transform: none; animation: none; }
   .reveal, .reveal.is-visible { opacity: 1; transform: none; }
 }
+
+.hero-title { margin: 0; font-size: clamp(2rem, 6vw, 3.4rem); }
+.hero-subtitle { margin: 0.75rem 0 0; color: #c9d2ea; max-width: 66ch; }
+
+.worksFilters {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.worksFilterPill {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(255,255,255,0.02);
+  color: #dfe6fa;
+  padding: 0.45rem 0.85rem;
+  transition: transform 200ms ease, border-color 220ms ease, box-shadow 220ms ease;
+}
+.worksFilterPill:hover { transform: translateY(-1px); }
+.worksFilterPill.is-active {
+  border-color: color-mix(in oklab, var(--accent, #9ea8ff) 45%, white);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent, #9ea8ff) 20%, transparent);
+}
+
+.worksListGrid {
+  margin-top: 1.2rem;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+.worksListCard {
+  --accent: #9ea8ff;
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid color-mix(in oklab, var(--accent) 30%, rgba(255,255,255,0.16));
+  border-radius: 16px;
+  padding: 1rem;
+  background: linear-gradient(160deg, color-mix(in oklab, var(--accent) 10%, rgba(255,255,255,0.04)), rgba(255,255,255,0.01));
+  transition: transform 240ms ease, box-shadow 240ms ease, border-color 220ms ease, filter 200ms ease;
+  animation: filterSwapIn 440ms ease;
+}
+.worksListCard:hover {
+  transform: perspective(1000px) rotateX(var(--tilt, 0deg)) rotateY(calc(var(--tilt, 0deg) * -1));
+  box-shadow: 0 10px 28px color-mix(in oklab, var(--accent) 22%, transparent);
+  border-color: color-mix(in oklab, var(--accent) 70%, white);
+  filter: saturate(1.08);
+}
+.worksListMeta {
+  color: #aeb8d4;
+  font-size: 0.8rem;
+  display: flex;
+  justify-content: space-between;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.worksListCard h3 { margin: 0.8rem 0 0.35rem; }
+.worksListCard p { margin: 0; color: #c4cee7; }
+
+.worksCardTags {
+  margin-top: 0.85rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+.worksCardTags span {
+  font-size: 0.75rem;
+  border: 1px solid color-mix(in oklab, var(--accent, #9ea8ff) 30%, rgba(255,255,255,0.2));
+  border-radius: 999px;
+  padding: 0.25rem 0.55rem;
+  background: rgba(255,255,255,0.03);
+}
+
+.workDetailRoot {
+  --accent: #9ea8ff;
+  position: relative;
+  border: 1px solid color-mix(in oklab, var(--accent) 35%, rgba(255,255,255,0.16));
+  border-radius: 20px;
+  overflow: hidden;
+  background: linear-gradient(165deg, color-mix(in oklab, var(--accent) 8%, rgba(255,255,255,0.04)), rgba(255,255,255,0.01));
+}
+.workDetailRoot::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.effect-grain::before {
+  opacity: 0.17;
+  background-image: radial-gradient(rgba(255,255,255,0.26) 0.8px, transparent 0.8px);
+  background-size: 2.5px 2.5px;
+}
+.effect-scanline::before {
+  opacity: 0.18;
+  background-image: repeating-linear-gradient(to bottom, rgba(255,255,255,0.07) 0 1px, transparent 1px 4px);
+  animation: scanMove 10s linear infinite;
+}
+.effect-lightleak::before {
+  opacity: 0.25;
+  background: radial-gradient(circle at 18% 22%, color-mix(in oklab, var(--accent) 55%, transparent), transparent 42%),
+    radial-gradient(circle at 82% 72%, rgba(255, 175, 120, 0.18), transparent 40%);
+  animation: leakDrift 14s ease-in-out infinite alternate;
+}
+.effect-glow .workSection:hover {
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--accent) 40%, transparent), 0 0 28px color-mix(in oklab, var(--accent) 30%, transparent);
+}
+
+.workHero { position: relative; z-index: 1; padding: 2rem 1.35rem 1.2rem; }
+.workDetailEyebrow { color: #adbae2; letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.8rem; }
+.workHero h1 { margin: 0.45rem 0; font-size: clamp(2.1rem, 8vw, 3.8rem); }
+.workIntro { margin: 0; color: #d2daef; max-width: 62ch; }
+.workHeroMeta { margin-top: 1rem; color: #aab5d2; }
+
+.workContent { position: relative; z-index: 1; padding: 0.4rem 1.35rem 1.2rem; }
+.workSection {
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 14px;
+  padding: 1rem;
+  margin-bottom: 0.8rem;
+  background: rgba(12, 15, 24, 0.5);
+  transition: box-shadow 220ms ease, border-color 220ms ease;
+}
+.workSection h2 {
+  margin: 0 0 0.65rem;
+  font-size: 1rem;
+  color: color-mix(in oklab, var(--accent) 55%, white);
+}
+.workSection p { margin: 0; color: #d4ddf2; line-height: 1.8; }
+.glitchHeading {
+  position: relative;
+  display: inline-block;
+  animation: glitchJitter 2.8s steps(2, end) infinite;
+}
+
+.workPager {
+  position: relative;
+  z-index: 1;
+  padding: 0.5rem 1.35rem 1.3rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+.workPagerLink {
+  text-decoration: none;
+  color: #e4eafe;
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 12px;
+  padding: 0.7rem 0.8rem;
+  background: rgba(255,255,255,0.02);
+  transition: opacity 220ms ease, transform 220ms ease, border-color 220ms ease;
+}
+.workPagerLink:hover {
+  opacity: 0.95;
+  transform: translateY(-1px);
+  border-color: color-mix(in oklab, var(--accent) 60%, white);
+}
+.workPagerLink:last-child { text-align: right; }
+.workFadeIn { animation: fadeSwitch 420ms ease; }
+
+@keyframes filterSwapIn {
+  from { opacity: 0; transform: translateY(10px) scale(0.99); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes scanMove {
+  from { transform: translateY(0); }
+  to { transform: translateY(12px); }
+}
+@keyframes leakDrift {
+  from { transform: translate3d(-1.5%, -2%, 0); }
+  to { transform: translate3d(1.5%, 2%, 0); }
+}
+@keyframes glitchJitter {
+  0%, 90%, 100% { transform: translate(0); text-shadow: none; }
+  91% { transform: translate(1px, -1px); text-shadow: -1px 0 rgba(255,0,200,0.35); }
+  93% { transform: translate(-1px, 1px); text-shadow: 1px 0 rgba(0,255,255,0.3); }
+}
+@keyframes fadeSwitch {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 900px) {
+  .worksListGrid { grid-template-columns: 1fr; }
+  .workPager { grid-template-columns: 1fr; }
+  .workPagerLink:last-child { text-align: left; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .worksListCard,
+  .workFadeIn,
+  .effect-scanline::before,
+  .effect-lightleak::before,
+  .glitchHeading {
+    animation: none !important;
+  }
+  .worksListCard:hover,
+  .workPagerLink:hover {
+    transform: none;
+    box-shadow: none;
+  }
+}

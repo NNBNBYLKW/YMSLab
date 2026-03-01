@@ -1,0 +1,71 @@
+"use client";
+
+import Link from "next/link";
+import { useMemo, useState } from "react";
+import { Stagger, StaggerItem } from "@/components/motion/Stagger";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
+import type { Work } from "@/data/works";
+
+type WorksIndexClientProps = {
+  works: Work[];
+  tags: string[];
+};
+
+export function WorksIndexClient({ works, tags }: WorksIndexClientProps) {
+  const [activeTag, setActiveTag] = useState<string>("全部");
+  const reduceMotion = useReducedMotion();
+
+  const filtered = useMemo(() => {
+    if (activeTag === "全部") return works;
+    return works.filter((work) => work.tags.includes(activeTag));
+  }, [activeTag, works]);
+
+  return (
+    <>
+      <div className="worksFilters" role="tablist" aria-label="作品标签过滤">
+        {["全部", ...tags].map((tag) => {
+          const active = activeTag === tag;
+          return (
+            <button
+              type="button"
+              role="tab"
+              aria-selected={active}
+              key={tag}
+              className={`worksFilterPill ${active ? "is-active" : ""}`.trim()}
+              onClick={() => setActiveTag(tag)}
+            >
+              {tag}
+            </button>
+          );
+        })}
+      </div>
+
+      <Stagger className="worksListGrid" delay={0.08} stagger={0.06} key={activeTag}>
+        {filtered.map((work) => (
+          <StaggerItem key={work.slug}>
+            <Link
+              href={`/works/${work.slug}`}
+              className="worksListCard"
+              style={{
+                ["--accent" as string]: work.theme.accent,
+                ["--tilt" as string]: reduceMotion ? "0deg" : "0.6deg",
+              }}
+            >
+              <div className="worksListMeta">
+                <span>{work.theme.mood}</span>
+                <span>{work.year}</span>
+              </div>
+              <h3>{work.title}</h3>
+              <p>{work.excerpt}</p>
+              <div className="worksCardTags">
+                {work.tags.map((tag) => (
+                  <span key={`${work.slug}-${tag}`}>{tag}</span>
+                ))}
+              </div>
+            </Link>
+          </StaggerItem>
+        ))}
+      </Stagger>
+    </>
+  );
+}
