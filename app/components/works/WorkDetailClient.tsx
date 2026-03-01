@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Reveal } from "@/components/motion/Reveal";
 import { Parallax } from "@/components/motion/Parallax";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { getMotionConfig } from "@/lib/motion";
 import type { Work } from "@/data/works";
 
 type WorkDetailClientProps = {
@@ -23,6 +24,7 @@ const effectCopy: Record<Work["theme"]["effect"], string> = {
 
 export function WorkDetailClient({ work, prev, next }: WorkDetailClientProps) {
   const reduceMotion = useReducedMotion();
+  const motion = getMotionConfig("medium", reduceMotion);
 
   return (
     <article
@@ -57,8 +59,8 @@ export function WorkDetailClient({ work, prev, next }: WorkDetailClientProps) {
         {work.body.map((paragraph, index) => (
           <Reveal key={`${work.slug}-${index}`} delay={index * 0.06}>
             <section className="workSection">
-              <Parallax offset={reduceMotion ? 0 : 20}>
-                <h2 className={work.theme.effect === "glitch" ? "glitchHeading" : ""}>章节 {String(index + 1).padStart(2, "0")}</h2>
+              <Parallax level="medium" offset={motion.parallaxOffset}>
+                <h2 className={work.theme.effect === "glitch" && motion.allowGlitch ? "glitchHeading" : ""}>章节 {String(index + 1).padStart(2, "0")}</h2>
               </Parallax>
               <p>{paragraph}</p>
             </section>
