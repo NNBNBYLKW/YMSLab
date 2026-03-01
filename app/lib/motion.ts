@@ -33,7 +33,7 @@ export type MotionConfig = {
   tokens: MotionTokens;
 };
 
-const tokens: MotionTokens = {
+export const MOTION_TOKENS: MotionTokens = {
   duration: {
     fast: 160,
     normal: 320,
@@ -80,13 +80,13 @@ export function getMotionConfig(level: MotionLevel, reducedMotion: boolean): Mot
   if (reducedMotion) {
     return {
       revealDistance: 0,
-      revealDurationMs: tokens.duration.fast,
+      revealDurationMs: MOTION_TOKENS.duration.fast,
       staggerDelay: 0,
       parallaxOffset: 0,
       allowMouseFollow: false,
       allowScrollLinked: false,
       allowGlitch: false,
-      tokens,
+      tokens: MOTION_TOKENS,
     };
   }
 
@@ -97,6 +97,6 @@ export function getMotionConfig(level: MotionLevel, reducedMotion: boolean): Mot
     allowMouseFollow: level === "high",
     allowScrollLinked: level !== "low",
     allowGlitch: level === "high",
-    tokens,
+    tokens: MOTION_TOKENS,
   };
 }

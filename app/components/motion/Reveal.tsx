@@ -80,8 +80,8 @@ export function Reveal({
         opacity: shown ? 1 : 0,
         transform: shown || reduce ? "translate3d(0,0,0)" : axisOffset(direction, resolvedDistance),
         transition: reduce
-          ? `opacity ${resolvedDurationMs}ms ease ${delay}s`
-          : `opacity ${resolvedDurationMs}ms ease ${delay}s, transform ${resolvedDurationMs}ms ease ${delay}s`,
+          ? `opacity ${resolvedDurationMs}ms ${motion.tokens.easing.decelerate} ${delay}s`
+          : `opacity ${resolvedDurationMs}ms ${motion.tokens.easing.decelerate} ${delay}s, transform ${resolvedDurationMs}ms ${motion.tokens.easing.decelerate} ${delay}s`,
         willChange: reduce ? "opacity" : "transform, opacity",
       }}
     >

@@ -14,11 +14,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <div className="siteShell">
           <header className="siteHeader">
-            <Link href="/" className="logo">YMS Lab</Link>
+            <Link href="/" className="logo headerStaggerItem" style={{ animationDelay: "0.02s" }}>YMS Lab</Link>
             <nav className="siteNav">
-              <Link href="/" className="navLink">Home</Link>
-              <Link href="/works" className="navLink">Works</Link>
-              <Link href="/blog" className="navLink">Blog</Link>
+              <Link href="/" className="navLink headerStaggerItem" style={{ animationDelay: "0.06s" }}>Home</Link>
+              <Link href="/works" className="navLink headerStaggerItem" style={{ animationDelay: "0.1s" }}>Works</Link>
+              <Link href="/blog" className="navLink headerStaggerItem" style={{ animationDelay: "0.14s" }}>Blog</Link>
             </nav>
           </header>
 
