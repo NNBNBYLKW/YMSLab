@@ -1103,3 +1103,183 @@ body,
     transition-duration: 0.3s;
   }
 }
+
+/* Time-driven global token system */
+:root {
+  color-scheme: light dark;
+  --bg: #050b1e;
+  --bg-elevated: #0a1634;
+  --surface: #101e42;
+  --surface-2: #132852;
+  --text: #e7eeff;
+  --text-muted: #9eafd9;
+  --border: #2a3f70;
+  --accent: #73a1ff;
+  --accent-2: #7e8dff;
+  --shadow-color: #020611;
+  --glow-color: #3d6fee;
+  --ring: #7c9cff;
+  --bg-grad-top: #101f46;
+  --bg-grad-bottom: #0a2b46;
+  --hero-grad-start: #101a39;
+  --hero-grad-mid: #0a132a;
+  --hero-grad-end: #111f41;
+  --theme-transition-duration: 14s;
+  --theme-transition-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --muted: var(--text-muted);
+  --line: color-mix(in oklab, var(--border) 88%, transparent);
+  --brand: var(--accent);
+  --card-bg: color-mix(in oklab, var(--surface) 84%, transparent);
+  --card-border: 1px solid var(--line);
+}
+
+body {
+  background:
+    radial-gradient(1200px 600px at 80% -10%, color-mix(in oklab, var(--bg-grad-top) 75%, transparent) 0%, transparent 58%),
+    radial-gradient(800px 500px at 10% 0%, color-mix(in oklab, var(--bg-grad-bottom) 65%, transparent) 0%, transparent 50%),
+    var(--bg);
+  color: var(--text);
+  transition: background-color var(--theme-transition-duration) var(--theme-transition-ease),
+    color var(--theme-transition-duration) var(--theme-transition-ease);
+}
+
+:where(.siteShell, .siteHeader, .hero, .card, .workDetailRoot, .worksListCard, .workInfoCard, .blogCard, .mottoSection, .workSection, .workPagerLink, .blogFilterPill, .worksFilterPill, .tag, .pill, .stepCard, .contactForm input, .contactForm textarea, .notFoundCard, .emptyState, .workMediaCard) {
+  transition: color var(--theme-transition-duration) var(--theme-transition-ease),
+    background-color var(--theme-transition-duration) var(--theme-transition-ease),
+    border-color var(--theme-transition-duration) var(--theme-transition-ease),
+    box-shadow var(--theme-transition-duration) var(--theme-transition-ease);
+}
+
+.logo,
+.hero h1,
+.section h2,
+.blogTitle,
+.blogIntroTitle,
+.workHero h1 { color: var(--text); }
+
+.eyebrow,
+.heroSub,
+.workCategory,
+.workDetailEyebrow,
+.workIntro,
+.workHeroMeta,
+.blogCardDate,
+.blogPostMeta,
+.blogIntroEyebrow,
+.blogIntroDesc,
+.blogRowDate,
+.siteFooter,
+.worksListMeta,
+.workMediaCard figcaption,
+.themeSwitch,
+.emptyState,
+.emptyState-minimal { color: var(--text-muted); }
+
+.navLink,
+.blogProse a,
+.workLinks a,
+a { color: var(--accent); }
+
+.navLink:hover,
+.navLink:focus-visible,
+.blogFilterPill.is-active,
+.worksFilterPill.is-active,
+.workPagerLink:hover,
+.btn:hover,
+.btn:focus-visible {
+  border-color: color-mix(in oklab, var(--ring) 52%, var(--border));
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--ring) 25%, transparent);
+}
+
+.hero {
+  background:
+    linear-gradient(140deg, color-mix(in oklab, var(--hero-grad-start) 86%, transparent), color-mix(in oklab, var(--hero-grad-mid) 58%, transparent) 38%, color-mix(in oklab, var(--hero-grad-end) 82%, transparent)),
+    radial-gradient(120% 100% at 84% 0%, color-mix(in oklab, var(--accent) 24%, transparent), transparent 58%),
+    radial-gradient(90% 88% at 6% 12%, color-mix(in oklab, var(--accent-2) 20%, transparent), transparent 52%);
+  box-shadow: inset 0 1px color-mix(in oklab, white 22%, transparent), 0 40px 90px color-mix(in oklab, var(--shadow-color) 72%, transparent);
+}
+
+.btn.primary,
+.btn-solid {
+  color: color-mix(in oklab, var(--bg) 78%, black);
+  background: color-mix(in oklab, var(--accent) 25%, var(--bg-elevated));
+  border-color: color-mix(in oklab, var(--accent) 60%, var(--border));
+}
+.btn.ghost,
+.btn-ghost { color: var(--text); background: color-mix(in oklab, var(--surface) 82%, transparent); }
+
+.card,
+.stepCard,
+.blogCard,
+.workSection,
+.workInfoCard,
+.workPagerLink,
+.blogFilterPill,
+.worksFilterPill,
+.workMediaCard,
+.notFoundCard,
+.emptyState,
+.pill,
+.tag,
+.contactForm input,
+.contactForm textarea,
+.mottoSection {
+  background: color-mix(in oklab, var(--surface) 88%, transparent);
+  border-color: var(--line);
+}
+
+.worksListCard,
+.workDetailRoot,
+.workCard,
+.worksListCover {
+  background: linear-gradient(160deg, color-mix(in oklab, var(--accent) 10%, var(--surface)), color-mix(in oklab, var(--surface-2) 85%, transparent));
+}
+
+.workInfoCard h2,
+.workSection h2 { color: color-mix(in oklab, var(--accent) 60%, var(--text)); }
+
+.blogProse,
+.blogCard p,
+.blogRowMain p,
+.workInfoCard p,
+.workInfoCard ul,
+.workSection p { color: color-mix(in oklab, var(--text) 88%, var(--text-muted)); }
+
+.blogProse blockquote,
+.blogProse pre,
+.blogProse th,
+.blogProse td,
+.blogListSimple,
+.blogRow,
+.siteFooter,
+.divider {
+  border-color: var(--line);
+}
+
+.blogProse blockquote,
+.blogProse th,
+.heroTicker span,
+.blogRow:hover { background: color-mix(in oklab, var(--surface-2) 68%, transparent); }
+
+.cursorGlow {
+  background: radial-gradient(circle, color-mix(in oklab, var(--glow-color) 55%, transparent) 0%, color-mix(in oklab, var(--glow-color) 12%, transparent) 42%, transparent 72%);
+}
+
+.cursorHalo {
+  background: radial-gradient(circle, color-mix(in oklab, var(--accent-2) 28%, transparent), transparent 62%);
+}
+
+.themeSwitch {
+  display: grid;
+  gap: 0.15rem;
+  font-size: 0.74rem;
+  padding: 0.3rem 0.65rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--surface) 88%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --theme-transition-duration: 0.45s; }
+}
