@@ -81,29 +81,46 @@ body::before {
 .homeRoot { position: relative; }
 .cursorGlow {
   position: fixed;
+  left: 0;
+  top: 0;
   width: 360px;
   height: 360px;
-  margin-left: -180px;
-  margin-top: -180px;
   pointer-events: none;
   z-index: -1;
   filter: blur(calc(var(--motion-blur-subtle) * 2));
   opacity: 0.32;
   border-radius: 50%;
+  will-change: transform;
+  transform: translate3d(50vw, 50vh, 0) translate(-50%, -50%);
   background: radial-gradient(circle, rgba(140,163,255,0.55) 0%, rgba(140,163,255,0.08) 42%, transparent 72%);
 }
 
 .cursorHalo {
   position: fixed;
+  left: 0;
+  top: 0;
   width: 560px;
   height: 560px;
-  margin-left: -280px;
-  margin-top: -280px;
   pointer-events: none;
   z-index: -2;
   opacity: 0.22;
   filter: blur(var(--motion-blur-subtle));
+  will-change: transform;
+  transform: translate3d(50vw, 50vh, 0) translate(-50%, -50%);
   background: radial-gradient(circle, rgba(133, 255, 222, 0.2), transparent 62%);
+}
+
+.cursorDebugDot {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 2px;
+  height: 2px;
+  border-radius: 999px;
+  pointer-events: none;
+  z-index: 40;
+  background: color-mix(in oklab, var(--ring) 72%, white);
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--bg) 78%, transparent);
 }
 
 .hero {
@@ -1282,4 +1299,95 @@ a { color: var(--accent); }
 
 @media (prefers-reduced-motion: reduce) {
   :root { --theme-transition-duration: 0.45s; }
+}
+
+/* Works card layout refinement */
+.worksListCard {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.worksListHead {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.worksListHead h3 {
+  margin: 0;
+  font-size: clamp(1.15rem, 2vw, 1.45rem);
+  line-height: 1.35;
+  color: var(--text);
+}
+
+.worksListMood {
+  margin: 0;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.worksListBody {
+  margin-top: 0.85rem;
+  display: grid;
+  gap: 0.72rem;
+}
+
+.worksListBody > p {
+  margin: 0;
+  color: color-mix(in oklab, var(--text) 86%, var(--text-muted));
+}
+
+.worksListMeta {
+  margin-top: auto;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  padding-top: 0.9rem;
+}
+
+.worksListMeta time {
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  border: 1px solid color-mix(in oklab, var(--border) 76%, transparent);
+  border-radius: 999px;
+  padding: 0.2rem 0.5rem;
+  background: color-mix(in oklab, var(--surface-2) 60%, transparent);
+}
+
+:root {
+  --cta-bg: var(--accent);
+  --cta-fg: var(--bg);
+}
+
+.btn.cta {
+  color: var(--cta-fg);
+  background: linear-gradient(145deg, color-mix(in oklab, var(--cta-bg) 92%, white), color-mix(in oklab, var(--cta-bg) 76%, var(--accent-2)));
+  border-color: color-mix(in oklab, var(--cta-bg) 70%, var(--border));
+  box-shadow: 0 10px 24px color-mix(in oklab, var(--glow-color) 26%, transparent), inset 0 1px color-mix(in oklab, white 44%, transparent);
+}
+
+.btn.cta:hover,
+.btn.cta:focus-visible {
+  transform: translateY(-2px);
+  border-color: color-mix(in oklab, var(--ring) 66%, var(--cta-bg));
+  box-shadow: 0 14px 30px color-mix(in oklab, var(--glow-color) 34%, transparent), 0 0 0 4px color-mix(in oklab, var(--ring) 24%, transparent);
+}
+
+.btn.cta:active {
+  transform: translateY(-1px);
+  filter: brightness(0.98);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn.cta,
+  .btn.cta:hover,
+  .btn.cta:focus-visible,
+  .btn.cta:active {
+    transform: none;
+    filter: none;
+  }
 }

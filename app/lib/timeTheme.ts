@@ -13,6 +13,8 @@ export type ThemePalette = {
   shadowColor: string;
   glowColor: string;
   ring: string;
+  ctaBg: string;
+  ctaFg: string;
   bgGradientTop: string;
   bgGradientBottom: string;
   heroGradientStart: string;
@@ -48,6 +50,8 @@ const ANCHORS: Record<ThemeSegment, ThemePalette> = {
     shadowColor: "#020611",
     glowColor: "#3D6FEE",
     ring: "#7C9CFF",
+    ctaBg: "#89AEFF",
+    ctaFg: "#07122E",
     bgGradientTop: "#101F46",
     bgGradientBottom: "#0A2B46",
     heroGradientStart: "#101A39",
@@ -67,6 +71,8 @@ const ANCHORS: Record<ThemeSegment, ThemePalette> = {
     shadowColor: "#7A6A68",
     glowColor: "#F6C58D",
     ring: "#F3B082",
+    ctaBg: "#5E7BE6",
+    ctaFg: "#FDF2E4",
     bgGradientTop: "#FFD9A8",
     bgGradientBottom: "#BFD7FF",
     heroGradientStart: "#FFE5C4",
@@ -86,6 +92,8 @@ const ANCHORS: Record<ThemeSegment, ThemePalette> = {
     shadowColor: "#7D90BB",
     glowColor: "#7FA2FF",
     ring: "#6285F2",
+    ctaBg: "#365ED8",
+    ctaFg: "#F5F8FF",
     bgGradientTop: "#EEF2FF",
     bgGradientBottom: "#DDE9FF",
     heroGradientStart: "#FFFFFF",
@@ -105,6 +113,8 @@ const ANCHORS: Record<ThemeSegment, ThemePalette> = {
     shadowColor: "#1B1536",
     glowColor: "#F08AA6",
     ring: "#FDB57A",
+    ctaBg: "#E69A66",
+    ctaFg: "#2C1F3F",
     bgGradientTop: "#FFB36A",
     bgGradientBottom: "#4A4E8A",
     heroGradientStart: "#4B4075",
@@ -159,6 +169,8 @@ function blendPalettes(from: ThemePalette, to: ThemePalette, progress: number): 
     shadowColor: mixColor(from.shadowColor, to.shadowColor, t),
     glowColor: mixColor(from.glowColor, to.glowColor, t),
     ring: mixColor(from.ring, to.ring, t),
+    ctaBg: mixColor(from.ctaBg, to.ctaBg, t),
+    ctaFg: mixColor(from.ctaFg, to.ctaFg, t),
     bgGradientTop: mixColor(from.bgGradientTop, to.bgGradientTop, t),
     bgGradientBottom: mixColor(from.bgGradientBottom, to.bgGradientBottom, t),
     heroGradientStart: mixColor(from.heroGradientStart, to.heroGradientStart, t),

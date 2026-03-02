@@ -25,6 +25,8 @@ const THEME_VAR_MAP: Record<string, string> = {
   "--shadow-color": "shadowColor",
   "--glow-color": "glowColor",
   "--ring": "ring",
+  "--cta-bg": "ctaBg",
+  "--cta-fg": "ctaFg",
   "--bg-grad-top": "bgGradientTop",
   "--bg-grad-bottom": "bgGradientBottom",
   "--hero-grad-start": "heroGradientStart",

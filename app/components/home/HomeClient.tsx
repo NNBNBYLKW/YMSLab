@@ -73,7 +73,7 @@ export function HomeClient({ recentWorks, featuredPosts }: { recentWorks: HomeWo
           用克制的高级动效，服务内容表达，而不是喧宾夺主。
         </p>
         <div className="heroCtas heroStaggerItem" style={{ animationDelay: `${motion.tokens.stagger.md + 0.12}s` }}>
-          <MagneticButton href="#recent-works" enabled={motion.allowMouseFollow}>近期作品</MagneticButton>
+          <MagneticButton href="#recent-works" enabled={motion.allowMouseFollow} variant="cta">近期作品</MagneticButton>
           <MagneticButton href="/blog" enabled={motion.allowMouseFollow} variant="ghost">博客精选</MagneticButton>
         </div>
       </section>

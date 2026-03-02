@@ -6,7 +6,7 @@ import { useEffect, useRef } from "react";
 type MagneticButtonProps = {
   href: string;
   children: React.ReactNode;
-  variant?: "primary" | "ghost";
+  variant?: "primary" | "ghost" | "cta";
   enabled: boolean;
   className?: string;
 };
