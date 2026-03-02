@@ -1,5 +1,29 @@
 export type WorkMood = "cinematic" | "documentary" | "commercial" | "motion" | "experimental";
-export type WorkEffect = "grain" | "glow" | "scanline" | "glitch" | "lightleak" | "none";
+export type WorkEffect = "grain" | "glow" | "scanline" | "glitch" | "lightleak" | "parallax-lines" | "none";
+
+export type WorkLink = {
+  label: string;
+  href: string;
+};
+
+export type WorkImage = {
+  title: string;
+  src: string;
+  alt: string;
+};
+
+export type WorkVideo = {
+  title: string;
+  src: string;
+  type: "local" | "external";
+};
+
+export type MediaItem = {
+  type: "image" | "video" | "bilibili" | "link";
+  title: string;
+  url: string;
+  description?: string;
+};
 
 export type Work = {
   slug: string;
@@ -7,6 +31,18 @@ export type Work = {
   year: number;
   tags: string[];
   excerpt: string;
+  cover: {
+    kicker: string;
+    oneLiner: string;
+  };
+  summary: string;
+  responsibilities: string[];
+  stack: string[];
+  links: WorkLink[];
+  images: WorkImage[];
+  videos: WorkVideo[];
+  bilibili?: string;
+  media?: MediaItem[];
   theme: {
     accent: string;
     mood: WorkMood;
@@ -20,8 +56,26 @@ export const works: Work[] = [
     slug: "city-after-rain",
     title: "雨后之城",
     year: 2024,
-    tags: ["Brand Film", "Color", "Sound Design"],
+    tags: ["品牌短片", "调色", "声音设计"],
     excerpt: "以低饱和夜景和慢节奏旁白，讲述城市基础设施背后的温度。",
+    cover: { kicker: "Brand Film", oneLiner: "低饱和夜景 + 慢节奏旁白，强调城市温度。" },
+    summary: "围绕“看不见的守护”展开的品牌叙事短片，服务于官网首屏与发布会暖场。",
+    responsibilities: ["创意方向", "叙事剪辑", "调色与声音设计"],
+    stack: ["Premiere Pro", "DaVinci Resolve", "After Effects"],
+    links: [
+      { label: "项目页面", href: "https://example.com/city-after-rain" },
+      { label: "源码仓库", href: "https://github.com/example/city-after-rain" },
+      { label: "演示链接", href: "https://demo.example.com/city-after-rain" },
+    ],
+    images: [
+      { title: "雨夜街景", src: "https://picsum.photos/seed/city-rain-1/1200/700", alt: "雨夜反光路面镜头" },
+      { title: "人物逆光", src: "https://picsum.photos/seed/city-rain-2/1200/700", alt: "逆光人群氛围镜头" },
+    ],
+    videos: [
+      { title: "主片预告", src: "https://example.com/videos/city-after-rain-trailer.mp4", type: "external" },
+      { title: "社媒短版", src: "https://example.com/videos/city-after-rain-social.mp4", type: "external" },
+    ],
+    bilibili: "https://www.bilibili.com/video/BV1cityafterrain",
     theme: { accent: "#7db4ff", mood: "cinematic", effect: "grain" },
     body: [
       "这支品牌短片围绕‘看不见的守护’展开。镜头选择大量反光路面和逆光人群，让质感集中在湿润空气里。",
@@ -30,50 +84,28 @@ export const works: Work[] = [
     ],
   },
   {
-    slug: "makers-archive",
-    title: "匠人档案",
-    year: 2023,
-    tags: ["Interview", "Documentary", "Typography"],
-    excerpt: "纪录片访谈包装，强调真实肌理与信息可读性。",
-    theme: { accent: "#89d6b7", mood: "documentary", effect: "scanline" },
-    body: [
-      "项目拍摄了六位来自不同工种的手艺人。我们将字幕系统做成‘注释式层级’，减少抢镜。",
-      "画面处理中使用轻微对比拉伸与偏冷色调，保留皮肤细节，避免纪录片常见的过度风格化。",
-      "整套包装最终沉淀为模板，供后续系列内容复用。",
-    ],
-  },
-  {
-    slug: "spark-launch",
-    title: "SPARK 发布开场",
-    year: 2025,
-    tags: ["Launch", "Product", "Compositing"],
-    excerpt: "产品发布会开场片，强调节奏冲击与亮点信息。",
-    theme: { accent: "#ffa45f", mood: "commercial", effect: "lightleak" },
-    body: [
-      "30 秒开场需要同时完成品牌记忆、产品命名与功能预告。我们采用强节奏分句和高反差构图。",
-      "关键帧段落使用‘光泄漏式’转场，让信息切换更自然，不会出现硬切造成的认知中断。",
-      "现场版本与直播版本分离调色，保证 LED 大屏和线上播放都能维持视觉冲击。",
-    ],
-  },
-  {
-    slug: "flow-ui-lab",
-    title: "Flow UI Motion Lab",
-    year: 2024,
-    tags: ["Motion", "UI", "Prototype"],
-    excerpt: "为 SaaS 产品构建组件级动效语言，统一反馈节奏。",
-    theme: { accent: "#9e8bff", mood: "motion", effect: "glow" },
-    body: [
-      "该项目将按钮、面板、提示等交互拆分为 12 组动效原子，统一时长曲线与层级规则。",
-      "我们重点控制 transform 与 opacity，避免布局抖动导致的性能问题。",
-      "最终输出 token 与示例代码，帮助开发和设计团队同步迭代。",
-    ],
-  },
-  {
     slug: "signal-breaker",
     title: "Signal Breaker",
-    year: 2022,
-    tags: ["Experimental", "Music", "Visual"],
-    excerpt: "实验视觉短片，借由故障语言表达情绪断裂。",
+    year: 2025,
+    tags: ["实验视觉", "音乐", "动态排版"],
+    excerpt: "实验视觉短片，借由微故障语言表达情绪断裂。",
+    cover: { kicker: "Experimental Visual", oneLiner: "声音峰值映射微故障，克制但有辨识度。" },
+    summary: "以音乐驱动视觉结构的实验短片，重点在节奏断裂与情绪层递进。",
+    responsibilities: ["视觉系统设定", "节奏剪辑", "动态排版"],
+    stack: ["After Effects", "TouchDesigner", "Audition"],
+    links: [
+      { label: "项目页面", href: "https://example.com/signal-breaker" },
+      { label: "源码仓库", href: "https://github.com/example/signal-breaker" },
+      { label: "演示链接", href: "https://demo.example.com/signal-breaker" },
+    ],
+    images: [
+      { title: "故障关键帧", src: "https://picsum.photos/seed/signal-breaker-1/1200/700", alt: "实验视觉关键帧" },
+      { title: "文字错位", src: "https://picsum.photos/seed/signal-breaker-2/1200/700", alt: "文字故障效果镜头" },
+    ],
+    videos: [
+      { title: "Festival Cut", src: "https://example.com/videos/signal-breaker-festival.mp4", type: "external" },
+    ],
+    bilibili: "https://www.bilibili.com/video/BV1signalbreaker",
     theme: { accent: "#ff74bd", mood: "experimental", effect: "glitch" },
     body: [
       "作品将音频采样的突发峰值映射为画面错位，形成‘情绪失真’的叙事手法。",
@@ -82,16 +114,24 @@ export const works: Work[] = [
     ],
   },
   {
-    slug: "plain-language-campaign",
-    title: "清晰表达计划",
-    year: 2021,
-    tags: ["Campaign", "Explainer", "Social"],
-    excerpt: "社媒传播向解释短片，以极简视觉突出信息效率。",
-    theme: { accent: "#e3e8f2", mood: "commercial", effect: "none" },
+    slug: "flow-ui-lab",
+    title: "Flow UI Motion Lab",
+    year: 2024,
+    tags: ["产品动效", "UI", "原型"],
+    excerpt: "为 SaaS 产品构建组件级动效语言，统一反馈节奏。",
+    cover: { kicker: "Product Motion", oneLiner: "从按钮到面板的动效原子化。" },
+    summary: "为产品团队建立可复用动效规范，提升交互一致性与性能稳定性。",
+    responsibilities: ["动效 token 体系", "交互原型", "实现策略评审"],
+    stack: ["Figma", "CSS Motion", "WAAPI", "Next.js"],
+    links: [{ label: "设计规范", href: "https://example.com/flow-ui-lab" }],
+    images: [{ title: "组件总览", src: "https://picsum.photos/seed/flow-ui-lab/1200/700", alt: "组件动效总览" }],
+    videos: [{ title: "组件演示", src: "https://example.com/videos/flow-ui-lab.mp4", type: "external" }],
+    bilibili: "https://www.bilibili.com/video/BV1flowuilab",
+    theme: { accent: "#9e8bff", mood: "motion", effect: "glow" },
     body: [
-      "该系列每集控制在 45 秒内，面向移动端优先排版。",
-      "画面尽量减少装饰性元素，把重点放在信息组织与节奏控制。",
-      "发布两周内平均完播率提升约 18%，验证了‘极简表达’在社媒端的有效性。",
+      "该项目将按钮、面板、提示等交互拆分为 12 组动效原子，统一时长曲线与层级规则。",
+      "我们重点控制 transform 与 opacity，避免布局抖动导致的性能问题。",
+      "最终输出 token 与示例代码，帮助开发和设计团队同步迭代。",
     ],
   },
 ];

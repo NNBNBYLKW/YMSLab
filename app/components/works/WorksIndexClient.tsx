@@ -28,14 +28,7 @@ export function WorksIndexClient({ works, tags }: WorksIndexClientProps) {
         {["全部", ...tags].map((tag) => {
           const active = activeTag === tag;
           return (
-            <button
-              type="button"
-              role="tab"
-              aria-selected={active}
-              key={tag}
-              className={`worksFilterPill ${active ? "is-active" : ""}`.trim()}
-              onClick={() => setActiveTag(tag)}
-            >
+            <button type="button" role="tab" aria-selected={active} key={tag} className={`worksFilterPill ${active ? "is-active" : ""}`.trim()} onClick={() => setActiveTag(tag)}>
               {tag}
             </button>
           );
@@ -45,30 +38,20 @@ export function WorksIndexClient({ works, tags }: WorksIndexClientProps) {
       {works.length === 0 ? (
         <div className="emptyState">暂无作品，稍后会更新精选案例。</div>
       ) : filtered.length === 0 ? (
-        <div className="emptyState">当前筛选下暂无结果，试试其他主题标签。</div>
+        <div className="emptyState">当前筛选下暂无结果，试试其他标签。</div>
       ) : (
         <Stagger className="worksListGrid" delay={0.08} level="medium" stagger={motion.staggerDelay} key={activeTag}>
           {filtered.map((work) => (
             <StaggerItem key={work.slug}>
-              <Link
-                href={`/works/${work.slug}`}
-                className={`worksListCard worksListCard-${work.theme.effect}`}
-                style={{
-                  ["--accent" as string]: work.theme.accent,
-                  ["--tilt" as string]: reduceMotion ? "0deg" : "0.6deg",
-                }}
-              >
-                <div className="worksListMeta">
-                  <span>{work.theme.mood}</span>
-                  <span>{work.year}</span>
+              <Link href={`/works/${work.slug}`} className={`worksListCard worksListCard-${work.theme.effect}`} style={{ ["--accent" as string]: work.theme.accent }}>
+                <div className="worksListCover" aria-hidden>
+                  <span>{work.cover.kicker}</span>
+                  <p>{work.cover.oneLiner}</p>
                 </div>
+                <div className="worksListMeta"><span>{work.theme.mood}</span><span>{work.year}</span></div>
                 <h3>{work.title}</h3>
                 <p>{work.excerpt}</p>
-                <div className="worksCardTags">
-                  {work.tags.map((tag) => (
-                    <span key={`${work.slug}-${tag}`}>{tag}</span>
-                  ))}
-                </div>
+                <div className="worksCardTags">{work.tags.map((tag) => <span key={`${work.slug}-${tag}`}>{tag}</span>)}</div>
               </Link>
             </StaggerItem>
           ))}

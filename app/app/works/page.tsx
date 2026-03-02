@@ -13,7 +13,7 @@ export default function WorksPage() {
           <Reveal level="medium">
             <Tag>Works</Tag>
             <h1 className="hero-title" style={{ marginTop: "0.75rem" }}>作品集</h1>
-            <p className="hero-subtitle">按主题浏览案例；每个项目页都会根据 mood / effect 呈现轻量特效。</p>
+            <p className="hero-subtitle">中等动效 + 主题特效点缀，重点始终是内容结构与信息可读性。</p>
           </Reveal>
 
           <WorksIndexClient works={works} tags={workTags} />
