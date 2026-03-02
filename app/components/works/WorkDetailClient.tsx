@@ -80,6 +80,66 @@ export function WorkDetailClient({ work, prev, next }: WorkDetailClientProps) {
         </Reveal>
       </div>
 
+      <div className="workStructuredGrid">
+        <Reveal>
+          <section className="workInfoCard">
+            <h2>简介</h2>
+            <p>{work.excerpt}</p>
+          </section>
+        </Reveal>
+
+        <Reveal delay={motion.staggerDelay}>
+          <section className="workInfoCard">
+            <h2>职责</h2>
+            <ul>
+              {work.responsibilities.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </section>
+        </Reveal>
+
+        <Reveal delay={motion.staggerDelay * 2}>
+          <section className="workInfoCard">
+            <h2>技术栈</h2>
+            <div className="worksCardTags">
+              {work.stack.map((item) => (
+                <span key={item}>{item}</span>
+              ))}
+            </div>
+          </section>
+        </Reveal>
+
+        <Reveal delay={motion.staggerDelay * 3}>
+          <section className="workInfoCard">
+            <h2>媒体</h2>
+            <ul>
+              {work.media.map((item) => (
+                <li key={`${item.type}-${item.title}`}>
+                  <strong>{item.type.toUpperCase()} · {item.title}</strong>
+                  <p>{item.description}</p>
+                </li>
+              ))}
+            </ul>
+          </section>
+        </Reveal>
+
+        <Reveal delay={motion.staggerDelay * 4}>
+          <section className="workInfoCard">
+            <h2>链接</h2>
+            <ul className="workLinks">
+              {work.links.map((item) => (
+                <li key={item.label}>
+                  <a href={item.href} target="_blank" rel="noreferrer">
+                    {item.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        </Reveal>
+      </div>
+
       <div className="workContent">
         {work.body.map((paragraph, index) => (
           <Reveal key={`${work.slug}-${index}`} delay={index * 0.06}>
