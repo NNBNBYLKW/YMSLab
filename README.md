@@ -2,6 +2,14 @@
 
 一个以中文为主的个人站点，包含首页、作品页、博客。
 
+## 项目文档导航
+
+- [一页总览](docs/OVERVIEW.md)
+- [本地开发与部署手册](docs/DEV_AND_DEPLOY.md)
+- [功能模块详解](docs/ARCHITECTURE.md)
+- [排障 Runbook](docs/RUNBOOK.md)
+- [可接手的待办清单](docs/TODO_HANDOFF.md)
+
 ## 时间驱动主题系统（浏览器本地时间）
 
 站点主题由客户端本地时间驱动（不是服务端时区），并以 **Night → Dawn → Day → Sunset → Night** 分段插值方式平滑变化。
