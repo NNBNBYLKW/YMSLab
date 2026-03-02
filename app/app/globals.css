@@ -227,9 +227,6 @@ body::before {
   will-change: transform;
   backface-visibility: hidden;
 }
-.magneticButton {
-  will-change: transform;
-}
 .btn.primary { color: #0b0d12; background: #f2f5ff; border-color: #f2f5ff; }
 .btn.ghost { color: var(--text); background: rgba(255,255,255,0.02); }
 .btn:hover, .btn:focus-visible { transform: translateY(-2px); box-shadow: 0 0 0 4px rgba(159,171,255,0.15); border-color: rgba(200,210,255,0.6); }
@@ -968,5 +965,141 @@ body::before {
 @media (prefers-reduced-motion: reduce) {
   .blogRow {
     transition: none;
+  }
+}
+
+/* Final phase overrides: theme + home IA + works media */
+:root {
+  --surface-bg: #08090d;
+  --surface-text: #f3f5fb;
+}
+
+:root[data-theme="light"] {
+  --bg: #f4f6fb;
+  --bg-soft: #ffffff;
+  --text: #161c2d;
+  --muted: #5b6480;
+  --line: rgba(27, 39, 78, 0.16);
+  --card-bg: rgba(20, 38, 88, 0.02);
+}
+
+:root[data-theme="dark"] {
+  --bg: #08090d;
+  --bg-soft: #10131a;
+  --text: #f3f5fb;
+  --muted: #98a2b3;
+  --line: rgba(255, 255, 255, 0.12);
+  --card-bg: rgba(255, 255, 255, 0.02);
+}
+
+html,
+body,
+.siteShell,
+.hero,
+.workDetailRoot,
+.blogCard,
+.worksListCard,
+.workInfoCard {
+  transition: background-color 12s linear, color 12s linear, border-color 12s linear, box-shadow 12s linear;
+}
+
+.themeSwitch {
+  display: flex;
+  gap: 0.35rem;
+  margin-left: 0.75rem;
+}
+
+.themeSwitch button {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.26rem 0.62rem;
+  background: rgba(255,255,255,0.03);
+  color: var(--text);
+  font-size: 0.74rem;
+}
+
+.themeSwitch button.is-active {
+  border-color: color-mix(in oklab, var(--brand) 55%, white);
+  box-shadow: 0 0 0 2px color-mix(in oklab, var(--brand) 18%, transparent);
+}
+
+.mottoSection {
+  margin-top: 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--card-bg);
+  padding: 0.95rem 1.05rem;
+}
+
+.mottoSection p {
+  margin: 0;
+  font-size: clamp(1.05rem, 2.6vw, 1.3rem);
+  color: color-mix(in oklab, var(--text) 88%, var(--brand));
+  letter-spacing: 0.01em;
+}
+
+.blogRowMain h3 {
+  margin: 0;
+  font-size: clamp(1.05rem, 1.8vw, 1.22rem);
+}
+
+.blogRowMain h3 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.blogRowMain h3 a:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.workMediaGrid {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.workMediaCard {
+  margin: 0;
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 10px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.02);
+}
+
+.workMediaCard img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.workMediaCard figcaption {
+  font-size: 0.8rem;
+  color: #c5d0ea;
+  padding: 0.5rem 0.65rem;
+}
+
+@media (max-width: 900px) {
+  .themeSwitch {
+    width: 100%;
+    margin-top: 0.55rem;
+    margin-left: 0;
+  }
+  .siteHeader {
+    flex-wrap: wrap;
+    row-gap: 0.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html,
+  body,
+  .siteShell,
+  .hero,
+  .workDetailRoot,
+  .blogCard,
+  .worksListCard,
+  .workInfoCard {
+    transition-duration: 0.3s;
   }
 }
