@@ -18,6 +18,13 @@ export type WorkVideo = {
   type: "local" | "external";
 };
 
+export type MediaItem = {
+  type: "image" | "video" | "bilibili" | "link";
+  title: string;
+  url: string;
+  description?: string;
+};
+
 export type Work = {
   slug: string;
   title: string;
@@ -35,6 +42,7 @@ export type Work = {
   images: WorkImage[];
   videos: WorkVideo[];
   bilibili?: string;
+  media?: MediaItem[];
   theme: {
     accent: string;
     mood: WorkMood;

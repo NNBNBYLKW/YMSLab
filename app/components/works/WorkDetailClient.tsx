@@ -26,6 +26,12 @@ export function WorkDetailClient({ work, prev, next }: WorkDetailClientProps) {
   const reduceMotion = useReducedMotion();
   const motion = getMotionConfig("medium", reduceMotion);
 
+
+  const fallbackMedia = (work.media ?? []).map((item) => ({
+    title: item.title,
+    detail: item.description ? `${item.type.toUpperCase()}：${item.description}` : `${item.type.toUpperCase()}：${item.url}`,
+  }));
+
   return (
     <article className={`workDetailRoot effect-${work.theme.effect}`} style={{ ["--accent" as string]: work.theme.accent }} key={work.slug}>
       <header className="workHero workFadeIn">
@@ -72,68 +78,8 @@ export function WorkDetailClient({ work, prev, next }: WorkDetailClientProps) {
           <section className="workInfoCard">
             <h2>视频</h2>
             <ul>
-              {work.videos.map((item) => (
-                <li key={item.src}><strong>{item.title}</strong><p>{item.type === "local" ? "本地视频" : "外链视频"}：{item.src}</p></li>
-              ))}
-            </ul>
-          </section>
-        </Reveal>
-      </div>
-
-      <div className="workStructuredGrid">
-        <Reveal>
-          <section className="workInfoCard">
-            <h2>简介</h2>
-            <p>{work.excerpt}</p>
-          </section>
-        </Reveal>
-
-        <Reveal delay={motion.staggerDelay}>
-          <section className="workInfoCard">
-            <h2>职责</h2>
-            <ul>
-              {work.responsibilities.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
-          </section>
-        </Reveal>
-
-        <Reveal delay={motion.staggerDelay * 2}>
-          <section className="workInfoCard">
-            <h2>技术栈</h2>
-            <div className="worksCardTags">
-              {work.stack.map((item) => (
-                <span key={item}>{item}</span>
-              ))}
-            </div>
-          </section>
-        </Reveal>
-
-        <Reveal delay={motion.staggerDelay * 3}>
-          <section className="workInfoCard">
-            <h2>媒体</h2>
-            <ul>
-              {work.media.map((item) => (
-                <li key={`${item.type}-${item.title}`}>
-                  <strong>{item.type.toUpperCase()} · {item.title}</strong>
-                  <p>{item.description}</p>
-                </li>
-              ))}
-            </ul>
-          </section>
-        </Reveal>
-
-        <Reveal delay={motion.staggerDelay * 4}>
-          <section className="workInfoCard">
-            <h2>链接</h2>
-            <ul className="workLinks">
-              {work.links.map((item) => (
-                <li key={item.label}>
-                  <a href={item.href} target="_blank" rel="noreferrer">
-                    {item.label}
-                  </a>
-                </li>
+              {[...work.videos.map((item) => ({ title: item.title, detail: `${item.type === "local" ? "本地视频" : "外链视频"}：${item.src}` })), ...fallbackMedia].map((item) => (
+                <li key={`${item.title}-${item.detail}`}><strong>{item.title}</strong><p>{item.detail}</p></li>
               ))}
             </ul>
           </section>
