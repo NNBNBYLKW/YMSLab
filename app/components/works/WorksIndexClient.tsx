@@ -44,14 +44,23 @@ export function WorksIndexClient({ works, tags }: WorksIndexClientProps) {
           {filtered.map((work) => (
             <StaggerItem key={work.slug}>
               <Link href={`/works/${work.slug}`} className={`worksListCard worksListCard-${work.theme.effect}`} style={{ ["--accent" as string]: work.theme.accent }}>
-                <div className="worksListCover" aria-hidden>
-                  <span>{work.cover.kicker}</span>
-                  <p>{work.cover.oneLiner}</p>
+                <header className="worksListHead">
+                  <h3>{work.title}</h3>
+                  <p className="worksListMood">{work.theme.mood}</p>
+                </header>
+
+                <div className="worksListBody">
+                  <div className="worksListCover" aria-hidden>
+                    <span>{work.cover.kicker}</span>
+                    <p>{work.cover.oneLiner}</p>
+                  </div>
+                  <p>{work.excerpt}</p>
+                  <div className="worksCardTags">{work.tags.map((tag) => <span key={`${work.slug}-${tag}`}>{tag}</span>)}</div>
                 </div>
-                <div className="worksListMeta"><span>{work.theme.mood}</span><span>{work.year}</span></div>
-                <h3>{work.title}</h3>
-                <p>{work.excerpt}</p>
-                <div className="worksCardTags">{work.tags.map((tag) => <span key={`${work.slug}-${tag}`}>{tag}</span>)}</div>
+
+                <div className="worksListMeta" aria-label={`作品年份 ${work.year}`}>
+                  <time>{work.year}</time>
+                </div>
               </Link>
             </StaggerItem>
           ))}

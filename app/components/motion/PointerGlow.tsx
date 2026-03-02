@@ -9,9 +9,12 @@ type PointerGlowProps = {
 
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 
+const SHOW_DEBUG_DOT = process.env.NODE_ENV !== "production";
+
 export function PointerGlow({ enabled, parallaxY = 0 }: PointerGlowProps) {
   const glowRef = useRef<HTMLDivElement | null>(null);
   const haloRef = useRef<HTMLDivElement | null>(null);
+  const debugRef = useRef<HTMLDivElement | null>(null);
   const rafRef = useRef<number | null>(null);
   const targetRef = useRef({ x: 0, y: 0 });
   const currentRef = useRef({ x: 0, y: 0 });
@@ -30,10 +33,22 @@ export function PointerGlow({ enabled, parallaxY = 0 }: PointerGlowProps) {
       ampRef.current = clamp(shortest / 1200, 0.7, 1.2);
     };
 
-    updateAmplitude();
+    const resetToCenter = () => {
+      const x = window.innerWidth / 2;
+      const y = window.innerHeight / 2;
+      targetRef.current = { x, y };
+      currentRef.current = { x, y };
+    };
 
-    const onResize = () => updateAmplitude();
-    const onPointerMove = (event: MouseEvent) => {
+    updateAmplitude();
+    resetToCenter();
+
+    const onResize = () => {
+      updateAmplitude();
+      resetToCenter();
+    };
+
+    const onPointerMove = (event: PointerEvent) => {
       if (window.matchMedia("(pointer: coarse)").matches) return;
       targetRef.current.x = event.clientX;
       targetRef.current.y = event.clientY;
@@ -52,23 +67,27 @@ export function PointerGlow({ enabled, parallaxY = 0 }: PointerGlowProps) {
       const amp = ampRef.current;
 
       if (glowRef.current) {
-        glowRef.current.style.transform = `translate3d(${x}px, ${y}px, 0) scale(${amp})`;
+        glowRef.current.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%) scale(${amp})`;
       }
 
       if (haloRef.current) {
-        haloRef.current.style.transform = `translate3d(${x}px, ${y}px, 0) translate3d(0, ${parallaxRef.current * -0.35}px, 0) scale(${amp})`;
+        haloRef.current.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%) translate3d(0, ${parallaxRef.current * -0.35}px, 0) scale(${amp})`;
+      }
+
+      if (debugRef.current) {
+        debugRef.current.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
       }
 
       rafRef.current = window.requestAnimationFrame(animate);
     };
 
     window.addEventListener("resize", onResize, { passive: true });
-    window.addEventListener("mousemove", onPointerMove, { passive: true });
+    window.addEventListener("pointermove", onPointerMove, { passive: true });
     rafRef.current = window.requestAnimationFrame(animate);
 
     return () => {
       window.removeEventListener("resize", onResize);
-      window.removeEventListener("mousemove", onPointerMove);
+      window.removeEventListener("pointermove", onPointerMove);
       if (rafRef.current) {
         window.cancelAnimationFrame(rafRef.current);
         rafRef.current = null;
@@ -82,6 +101,7 @@ export function PointerGlow({ enabled, parallaxY = 0 }: PointerGlowProps) {
     <>
       <div ref={glowRef} className="cursorGlow" aria-hidden />
       <div ref={haloRef} className="cursorHalo" aria-hidden />
+      {SHOW_DEBUG_DOT ? <div ref={debugRef} className="cursorDebugDot" aria-hidden /> : null}
     </>
   );
 }
