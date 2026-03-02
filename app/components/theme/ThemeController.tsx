@@ -1,81 +1,119 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { formatMinutes, getThemeSnapshot, parseDebugTime } from "@/lib/timeTheme";
 
-type ThemePreference = "light" | "dark" | "system";
-
-const STORAGE_KEY = "yms-theme-preference";
-
-function getTimeFallbackTheme() {
-  const hour = new Date().getHours();
-  return hour >= 7 && hour < 19 ? "light" : "dark";
+declare global {
+  interface Window {
+    __setThemeTime?: (value?: string) => void;
+  }
 }
 
-function resolveTheme(pref: ThemePreference) {
-  if (pref === "light" || pref === "dark") return pref;
+const UPDATE_MS = 30_000;
+const STORAGE_KEY = "yms-debug-theme-time";
 
-  if (typeof window !== "undefined" && window.matchMedia) {
-    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-  }
+const THEME_VAR_MAP: Record<string, string> = {
+  "--bg": "bg",
+  "--bg-elevated": "bgElevated",
+  "--surface": "surface",
+  "--surface-2": "surface2",
+  "--text": "text",
+  "--text-muted": "textMuted",
+  "--border": "border",
+  "--accent": "accent",
+  "--accent-2": "accent2",
+  "--shadow-color": "shadowColor",
+  "--glow-color": "glowColor",
+  "--ring": "ring",
+  "--bg-grad-top": "bgGradientTop",
+  "--bg-grad-bottom": "bgGradientBottom",
+  "--hero-grad-start": "heroGradientStart",
+  "--hero-grad-mid": "heroGradientMid",
+  "--hero-grad-end": "heroGradientEnd",
+};
 
-  return getTimeFallbackTheme();
+function readQueryDebugTime() {
+  const url = new URL(window.location.href);
+  const query = url.searchParams.get("debugThemeTime") ?? url.searchParams.get("themeTime");
+  if (!query) return null;
+  return parseDebugTime(query);
 }
 
 export function ThemeController() {
-  const [preference, setPreference] = useState<ThemePreference>("system");
+  const [debugMinute, setDebugMinute] = useState<number | null>(null);
+  const [tick, setTick] = useState(0);
 
   useEffect(() => {
-    const saved = window.localStorage.getItem(STORAGE_KEY) as ThemePreference | null;
-    if (saved === "light" || saved === "dark" || saved === "system") {
-      setPreference(saved);
+    const queryDebug = readQueryDebugTime();
+    if (queryDebug !== null) {
+      setDebugMinute(queryDebug);
+      window.localStorage.setItem(STORAGE_KEY, formatMinutes(queryDebug));
+      return;
+    }
+
+    const saved = window.localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      const parsed = parseDebugTime(saved);
+      if (parsed !== null) setDebugMinute(parsed);
     }
   }, []);
 
-  const resolved = useMemo(() => resolveTheme(preference), [preference]);
-
   useEffect(() => {
-    document.documentElement.dataset.theme = resolved;
-  }, [resolved]);
+    const sync = () => setTick((value) => value + 1);
+    const timer = window.setInterval(sync, UPDATE_MS);
 
-  useEffect(() => {
-    const media = window.matchMedia("(prefers-color-scheme: dark)");
-
-    const onSystemChange = () => {
-      if (preference === "system") {
-        document.documentElement.dataset.theme = resolveTheme("system");
-      }
+    const onVisible = () => {
+      if (document.visibilityState === "visible") sync();
     };
 
-    const timer = window.setInterval(() => {
-      if (preference === "system") {
-        document.documentElement.dataset.theme = resolveTheme("system");
-      }
-    }, 5 * 60 * 1000);
+    document.addEventListener("visibilitychange", onVisible);
 
-    media.addEventListener("change", onSystemChange);
+    window.__setThemeTime = (value?: string) => {
+      if (!value) {
+        window.localStorage.removeItem(STORAGE_KEY);
+        setDebugMinute(null);
+        sync();
+        return;
+      }
+
+      const parsed = parseDebugTime(value);
+      if (parsed === null) return;
+      window.localStorage.setItem(STORAGE_KEY, formatMinutes(parsed));
+      setDebugMinute(parsed);
+      sync();
+    };
 
     return () => {
-      media.removeEventListener("change", onSystemChange);
       window.clearInterval(timer);
+      document.removeEventListener("visibilitychange", onVisible);
+      delete window.__setThemeTime;
     };
-  }, [preference]);
+  }, []);
 
-  const updatePreference = (next: ThemePreference) => {
-    setPreference(next);
-    window.localStorage.setItem(STORAGE_KEY, next);
-  };
+  const snapshot = useMemo(() => {
+    void tick;
+    if (debugMinute !== null) {
+      const d = new Date();
+      d.setHours(Math.floor(debugMinute / 60), Math.floor(debugMinute % 60), 0, 0);
+      return getThemeSnapshot(d);
+    }
+    return getThemeSnapshot();
+  }, [debugMinute, tick]);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    root.dataset.themeSegment = snapshot.segment;
+
+    Object.entries(THEME_VAR_MAP).forEach(([cssVar, paletteKey]) => {
+      const value = snapshot.palette[paletteKey as keyof typeof snapshot.palette];
+      root.style.setProperty(cssVar, value);
+    });
+  }, [snapshot]);
 
   return (
-    <div className="themeSwitch" role="group" aria-label="主题模式">
-      <button type="button" className={preference === "light" ? "is-active" : ""} onClick={() => updatePreference("light")}>
-        日间
-      </button>
-      <button type="button" className={preference === "dark" ? "is-active" : ""} onClick={() => updatePreference("dark")}>
-        夜间
-      </button>
-      <button type="button" className={preference === "system" ? "is-active" : ""} onClick={() => updatePreference("system")}>
-        跟随系统
-      </button>
+    <div className="themeSwitch" aria-live="polite">
+      <span>时段：{snapshot.segment}</span>
+      <span>{debugMinute !== null ? `调试 ${formatMinutes(debugMinute)}` : "本地时间驱动"}</span>
     </div>
   );
 }
