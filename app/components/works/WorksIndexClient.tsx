@@ -5,10 +5,10 @@ import { useMemo, useState } from "react";
 import { Stagger, StaggerItem } from "@/components/motion/Stagger";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { getMotionConfig } from "@/lib/motion";
-import type { Work } from "@/data/works";
+import type { WorkMeta } from "@/lib/works";
 
 type WorksIndexClientProps = {
-  works: Work[];
+  works: WorkMeta[];
   tags: string[];
 };
 
@@ -43,23 +43,22 @@ export function WorksIndexClient({ works, tags }: WorksIndexClientProps) {
         <Stagger className="worksListGrid" delay={0.08} level="medium" stagger={motion.staggerDelay} key={activeTag}>
           {filtered.map((work) => (
             <StaggerItem key={work.slug}>
-              <Link href={`/works/${work.slug}`} className={`worksListCard worksListCard-${work.theme.effect}`} style={{ ["--accent" as string]: work.theme.accent }}>
+              <Link href={`/works/${work.slug}`} className="worksListCard">
                 <header className="worksListHead">
                   <h3>{work.title}</h3>
-                  <p className="worksListMood">{work.theme.mood}</p>
+                  <p className="worksListMood">{work.category}</p>
                 </header>
 
                 <div className="worksListBody">
                   <div className="worksListCover" aria-hidden>
-                    <span>{work.cover.kicker}</span>
-                    <p>{work.cover.oneLiner}</p>
+                    <span>{work.category}</span>
+                    <p>{work.summary}</p>
                   </div>
-                  <p>{work.excerpt}</p>
                   <div className="worksCardTags">{work.tags.map((tag) => <span key={`${work.slug}-${tag}`}>{tag}</span>)}</div>
                 </div>
 
-                <div className="worksListMeta" aria-label={`作品年份 ${work.year}`}>
-                  <time>{work.year}</time>
+                <div className="worksListMeta" aria-label={`作品日期 ${work.date}`}>
+                  <time>{work.date}</time>
                 </div>
               </Link>
             </StaggerItem>

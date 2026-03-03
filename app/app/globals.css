@@ -1391,3 +1391,125 @@ a { color: var(--accent); }
     filter: none;
   }
 }
+
+.workCoverFigure {
+  margin: 1rem 0 0;
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  overflow: hidden;
+  background: color-mix(in oklab, var(--surface-2) 70%, transparent);
+}
+
+.workCoverFigure img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.workMediaStack {
+  display: grid;
+  gap: 1rem;
+}
+
+.workGallery h3 {
+  margin: 0 0 0.75rem;
+  color: var(--text);
+}
+
+.workMediaCard video {
+  width: 100%;
+  border-radius: 0.75rem;
+  background: #000;
+}
+
+.workMediaCard figcaption {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.bilibiliLinkGroup {
+  margin-top: 0.75rem;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.bilibiliLinkCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  padding: 0.65rem 0.8rem;
+  border-radius: 0.8rem;
+  border: 1px solid color-mix(in oklab, var(--accent) 40%, var(--line));
+  background: color-mix(in oklab, var(--accent) 12%, var(--surface));
+  color: var(--text);
+  text-decoration: none;
+}
+
+.bilibiliLinkCard:hover,
+.bilibiliLinkCard:focus-visible {
+  border-color: color-mix(in oklab, var(--accent) 72%, var(--line));
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--ring) 22%, transparent);
+}
+
+.bilibiliLinkIcon {
+  display: inline-flex;
+  width: 1.35rem;
+  height: 1.35rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--accent) 30%, transparent);
+}
+
+:root {
+  --tag-bg: color-mix(in oklab, var(--surface-2) 75%, transparent);
+  --tag-fg: var(--text);
+  --tag-border: var(--line);
+  --tag-hover-bg: color-mix(in oklab, var(--surface-2) 85%, transparent);
+  --tag-hover-border: color-mix(in oklab, var(--ring) 42%, var(--line));
+}
+
+.blogCardTags span,
+.tag,
+.tags span,
+.worksCardTags span {
+  background: var(--tag-bg);
+  color: var(--tag-fg);
+  border: 1px solid var(--tag-border);
+}
+
+.blogCardTags span:hover,
+.blogCardTags span:focus-visible,
+.tag:hover,
+.tag:focus-visible {
+  background: var(--tag-hover-bg);
+  border-color: var(--tag-hover-border);
+}
+
+.themeSwitch {
+  display: grid;
+  align-items: center;
+  grid-template-columns: auto;
+  gap: 0.2rem;
+}
+
+.themeModeLabel {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.themeModeSelect {
+  min-width: 6.5rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: color-mix(in oklab, var(--surface) 85%, transparent);
+  color: var(--text);
+  padding: 0.22rem 0.55rem;
+}
+
+.themeModeSelect:focus-visible {
+  outline: none;
+  border-color: color-mix(in oklab, var(--ring) 58%, var(--line));
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--ring) 20%, transparent);
+}

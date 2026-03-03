@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { formatMinutes, getThemeSnapshot, parseDebugTime } from "@/lib/timeTheme";
+import { formatMinutes, getThemeSnapshot, parseDebugTime, type ThemeMode } from "@/lib/timeTheme";
 
 declare global {
   interface Window {
@@ -11,6 +11,7 @@ declare global {
 
 const UPDATE_MS = 30_000;
 const STORAGE_KEY = "yms-debug-theme-time";
+const MODE_STORAGE_KEY = "ymslab_theme_mode";
 
 const THEME_VAR_MAP: Record<string, string> = {
   "--bg": "bg",
@@ -32,6 +33,11 @@ const THEME_VAR_MAP: Record<string, string> = {
   "--hero-grad-start": "heroGradientStart",
   "--hero-grad-mid": "heroGradientMid",
   "--hero-grad-end": "heroGradientEnd",
+  "--tag-bg": "tagBg",
+  "--tag-fg": "tagFg",
+  "--tag-border": "tagBorder",
+  "--tag-hover-bg": "tagHoverBg",
+  "--tag-hover-border": "tagHoverBorder",
 };
 
 function readQueryDebugTime() {
@@ -41,23 +47,31 @@ function readQueryDebugTime() {
   return parseDebugTime(query);
 }
 
+function readThemeMode(): ThemeMode {
+  const raw = window.localStorage.getItem(MODE_STORAGE_KEY);
+  if (raw === "day" || raw === "night" || raw === "auto") return raw;
+  return "auto";
+}
+
 export function ThemeController() {
   const [debugMinute, setDebugMinute] = useState<number | null>(null);
   const [tick, setTick] = useState(0);
+  const [mode, setMode] = useState<ThemeMode>("auto");
 
   useEffect(() => {
     const queryDebug = readQueryDebugTime();
     if (queryDebug !== null) {
       setDebugMinute(queryDebug);
       window.localStorage.setItem(STORAGE_KEY, formatMinutes(queryDebug));
-      return;
+    } else {
+      const saved = window.localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const parsed = parseDebugTime(saved);
+        if (parsed !== null) setDebugMinute(parsed);
+      }
     }
 
-    const saved = window.localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      const parsed = parseDebugTime(saved);
-      if (parsed !== null) setDebugMinute(parsed);
-    }
+    setMode(readThemeMode());
   }, []);
 
   useEffect(() => {
@@ -94,28 +108,50 @@ export function ThemeController() {
 
   const snapshot = useMemo(() => {
     void tick;
+
+    if (mode === "day") return getThemeSnapshot(undefined, undefined, "day");
+    if (mode === "night") return getThemeSnapshot(undefined, undefined, "night");
+
     if (debugMinute !== null) {
       const d = new Date();
       d.setHours(Math.floor(debugMinute / 60), Math.floor(debugMinute % 60), 0, 0);
-      return getThemeSnapshot(d);
+      return getThemeSnapshot(d, undefined, "auto");
     }
-    return getThemeSnapshot();
-  }, [debugMinute, tick]);
+
+    return getThemeSnapshot(undefined, undefined, "auto");
+  }, [debugMinute, mode, tick]);
 
   useEffect(() => {
     const root = document.documentElement;
     root.dataset.themeSegment = snapshot.segment;
+    root.dataset.themeMode = mode;
 
     Object.entries(THEME_VAR_MAP).forEach(([cssVar, paletteKey]) => {
       const value = snapshot.palette[paletteKey as keyof typeof snapshot.palette];
       root.style.setProperty(cssVar, value);
     });
-  }, [snapshot]);
+  }, [mode, snapshot]);
+
+  const handleModeChange = (nextMode: ThemeMode) => {
+    setMode(nextMode);
+    window.localStorage.setItem(MODE_STORAGE_KEY, nextMode);
+  };
 
   return (
-    <div className="themeSwitch" aria-live="polite">
-      <span>时段：{snapshot.segment}</span>
-      <span>{debugMinute !== null ? `调试 ${formatMinutes(debugMinute)}` : "本地时间驱动"}</span>
+    <div className="themeSwitch">
+      <label htmlFor="theme-mode-select" className="themeModeLabel">主题模式</label>
+      <select
+        id="theme-mode-select"
+        className="themeModeSelect"
+        value={mode}
+        onChange={(event) => handleModeChange(event.target.value as ThemeMode)}
+        aria-label="切换主题模式"
+      >
+        <option value="auto">自动</option>
+        <option value="day">日间</option>
+        <option value="night">夜间</option>
+      </select>
+      <span>{mode === "auto" ? `自动 · ${snapshot.segment}` : `固定 · ${mode}`}</span>
     </div>
   );
 }
