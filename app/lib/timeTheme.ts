@@ -1,4 +1,5 @@
 export type ThemeSegment = "night" | "dawn" | "day" | "sunset";
+export type ThemeMode = "auto" | "day" | "night";
 
 export type ThemePalette = {
   bg: string;
@@ -20,6 +21,11 @@ export type ThemePalette = {
   heroGradientStart: string;
   heroGradientMid: string;
   heroGradientEnd: string;
+  tagBg: string;
+  tagFg: string;
+  tagBorder: string;
+  tagHoverBg: string;
+  tagHoverBorder: string;
 };
 
 export type ThemeTimeConfig = {
@@ -57,6 +63,11 @@ const ANCHORS: Record<ThemeSegment, ThemePalette> = {
     heroGradientStart: "#101A39",
     heroGradientMid: "#0A132A",
     heroGradientEnd: "#111F41",
+    tagBg: "#132852",
+    tagFg: "#dce6ff",
+    tagBorder: "#3a568f",
+    tagHoverBg: "#1b3568",
+    tagHoverBorder: "#597cc0",
   },
   dawn: {
     bg: "#F6E2C9",
@@ -78,6 +89,11 @@ const ANCHORS: Record<ThemeSegment, ThemePalette> = {
     heroGradientStart: "#FFE5C4",
     heroGradientMid: "#F7E5D8",
     heroGradientEnd: "#D0E3FF",
+    tagBg: "#e7eeff",
+    tagFg: "#233a70",
+    tagBorder: "#9fb5e8",
+    tagHoverBg: "#d8e4ff",
+    tagHoverBorder: "#6c89cf",
   },
   day: {
     bg: "#F6F8FF",
@@ -99,6 +115,11 @@ const ANCHORS: Record<ThemeSegment, ThemePalette> = {
     heroGradientStart: "#FFFFFF",
     heroGradientMid: "#F2F6FF",
     heroGradientEnd: "#E4EDFF",
+    tagBg: "#dde7ff",
+    tagFg: "#173571",
+    tagBorder: "#86a1da",
+    tagHoverBg: "#cfddff",
+    tagHoverBorder: "#5075c6",
   },
   sunset: {
     bg: "#2A2448",
@@ -120,6 +141,11 @@ const ANCHORS: Record<ThemeSegment, ThemePalette> = {
     heroGradientStart: "#4B4075",
     heroGradientMid: "#7C4C6B",
     heroGradientEnd: "#3D477D",
+    tagBg: "#554a7d",
+    tagFg: "#f9ebff",
+    tagBorder: "#9075b6",
+    tagHoverBg: "#67538f",
+    tagHoverBorder: "#b18de0",
   },
 };
 
@@ -176,6 +202,11 @@ function blendPalettes(from: ThemePalette, to: ThemePalette, progress: number): 
     heroGradientStart: mixColor(from.heroGradientStart, to.heroGradientStart, t),
     heroGradientMid: mixColor(from.heroGradientMid, to.heroGradientMid, t),
     heroGradientEnd: mixColor(from.heroGradientEnd, to.heroGradientEnd, t),
+    tagBg: mixColor(from.tagBg, to.tagBg, t),
+    tagFg: mixColor(from.tagFg, to.tagFg, t),
+    tagBorder: mixColor(from.tagBorder, to.tagBorder, t),
+    tagHoverBg: mixColor(from.tagHoverBg, to.tagHoverBg, t),
+    tagHoverBorder: mixColor(from.tagHoverBorder, to.tagHoverBorder, t),
   };
 }
 
@@ -198,7 +229,18 @@ export function parseDebugTime(input: string): number | null {
   return hour * 60 + minute;
 }
 
-export function getThemeSnapshot(now = new Date(), config: ThemeTimeConfig = DEFAULT_TIME_CONFIG) {
+export function getThemeSnapshot(now = new Date(), config: ThemeTimeConfig = DEFAULT_TIME_CONFIG, mode: ThemeMode = "auto") {
+  if (mode === "day") {
+    const fixed = new Date(now);
+    fixed.setHours(12, 0, 0, 0);
+    now = fixed;
+  }
+
+  if (mode === "night") {
+    const fixed = new Date(now);
+    fixed.setHours(1, 0, 0, 0);
+    now = fixed;
+  }
   const minute = asMinutes(now);
 
   let segment: ThemeSegment = "night";

@@ -9,6 +9,7 @@
 - [功能模块详解](docs/ARCHITECTURE.md)
 - [排障 Runbook](docs/RUNBOOK.md)
 - [可接手的待办清单](docs/TODO_HANDOFF.md)
+- [作品内容维护流程](docs/CONTENT_WORKFLOW.md)
 
 ## 时间驱动主题系统（浏览器本地时间）
 
@@ -45,6 +46,16 @@
 - `--ring`
 
 并附带背景/hero 渐变变量，让背景、卡片、按钮、边框、文本、链接、高光与阴影一起变化。
+
+### 手动主题模式
+
+导航栏提供 `自动 / 日间 / 夜间` 三态切换：
+
+- 自动：随本地时间平滑变化
+- 日间：固定 12:00 的主题
+- 夜间：固定 01:00 的主题
+
+当前模式会保存到 `localStorage(ymslab_theme_mode)`。
 
 ### 调试时间（开发）
 
