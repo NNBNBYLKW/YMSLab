@@ -198,36 +198,25 @@ async function getWorkFiles(): Promise<string[]> {
 export async function getAllWorks(): Promise<WorkMeta[]> {
   const files = await getWorkFiles();
 
-  if (files.length === 0) {
-    return legacyToMeta().sort((a, b) => dateSortValue(b.date).localeCompare(dateSortValue(a.date)));
-  }
+  const worksBySlug = new Map<string, WorkMeta>();
 
-  const works: WorkMeta[] = [];
+  for (const legacy of legacyToMeta()) {
+    worksBySlug.set(legacy.slug, legacy);
+  }
 
   for (const file of files) {
     const slug = file.replace(/\.md$/, "");
     const raw = await fs.readFile(path.join(WORKS_DIR, file), "utf-8");
     const { data } = matter(raw);
-    works.push(parseMeta(slug, data));
+    worksBySlug.set(slug, parseMeta(slug, data));
   }
 
+  const works = Array.from(worksBySlug.values());
   works.sort((a, b) => dateSortValue(b.date).localeCompare(dateSortValue(a.date)));
   return works;
 }
 
 export async function getWorkBySlug(slug: string): Promise<{ meta: WorkMeta; html: string } | null> {
-  const files = await getWorkFiles();
-
-  if (files.length === 0) {
-    const fallback = legacyWorks.find((item) => item.slug === slug);
-    if (!fallback) return null;
-
-    const html = fallback.body.map((paragraph) => `<p>${paragraph}</p>`).join("\n");
-    const meta = legacyToMeta().find((item) => item.slug === slug);
-    if (!meta) return null;
-    return { meta, html };
-  }
-
   const filePath = path.join(WORKS_DIR, `${slug}.md`);
 
   try {
@@ -240,7 +229,13 @@ export async function getWorkBySlug(slug: string): Promise<{ meta: WorkMeta; htm
       html: processed.toString(),
     };
   } catch {
-    return null;
+    const fallback = legacyWorks.find((item) => item.slug === slug);
+    if (!fallback) return null;
+
+    const html = fallback.body.map((paragraph) => `<p>${paragraph}</p>`).join("\n");
+    const meta = legacyToMeta().find((item) => item.slug === slug);
+    if (!meta) return null;
+    return { meta, html };
   }
 }
 
